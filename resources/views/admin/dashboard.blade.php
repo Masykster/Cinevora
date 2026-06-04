@@ -65,4 +65,39 @@
         </div>
     </div>
 </div>
+
+{{-- CLOSED SCHEDULES HISTORY --}}
+<div class="card mt-3" style="margin-top: 1.5rem;">
+    <div style="padding: 1.25rem; border-bottom: 1px solid var(--clr-border);">
+        <h3 style="font-family: var(--font-heading); font-weight: 700;">🕒 Riwayat Jadwal Tayang (Tutup)</h3>
+    </div>
+    <div class="table-wrapper" style="overflow-x: auto; padding: 0.5rem;">
+        <table class="table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--clr-border); text-align: left;">
+                    <th style="padding: 0.75rem;">Film</th>
+                    <th style="padding: 0.75rem;">Bioskop</th>
+                    <th style="padding: 0.75rem;">Waktu Tayang</th>
+                    <th style="padding: 0.75rem; text-align: center;">Tiket Terjual</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($closedSchedules as $schedule)
+                    <tr style="border-bottom: 1px solid var(--clr-border);">
+                        <td style="padding: 0.75rem; font-weight: 600;">{{ $schedule->movie->title }}</td>
+                        <td style="padding: 0.75rem;">{{ $schedule->studio->cinema->name }} ({{ $schedule->studio->name }})</td>
+                        <td style="padding: 0.75rem;">{{ $schedule->show_date->format('d M Y') }} · {{ $schedule->show_time_formatted }}</td>
+                        <td style="padding: 0.75rem; text-align: center;">
+                            <span class="badge badge-success">{{ $schedule->tickets_count }} tiket</span>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center text-muted" style="padding: 2rem;">Belum ada riwayat jadwal tutup</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 @endsection

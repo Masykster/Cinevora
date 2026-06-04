@@ -16,6 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->redirectGuestsTo('/login');
+
+        $middleware->encryptCookies(except: ['cinevora_city']);
+
+        $middleware->validateCsrfTokens(except: [
+            'xendit/webhook',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

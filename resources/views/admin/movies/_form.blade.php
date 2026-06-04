@@ -74,13 +74,13 @@
 
 <div class="grid grid-2 gap-3">
     <div class="form-group">
-        <label class="form-label" for="poster">Poster</label>
-        <input type="file" id="poster" name="poster" class="form-input" accept="image/*">
+        <label class="form-label" for="poster">URL Poster</label>
+        <input type="text" id="poster" name="poster" class="form-input" value="{{ old('poster', $movie?->poster) }}" placeholder="https://image.tmdb.org/t/p/...">
         @error('poster')<p class="form-error">{{ $message }}</p>@enderror
     </div>
     <div class="form-group">
-        <label class="form-label" for="banner">Banner</label>
-        <input type="file" id="banner" name="banner" class="form-input" accept="image/*">
+        <label class="form-label" for="banner">URL Banner</label>
+        <input type="text" id="banner" name="banner" class="form-input" value="{{ old('banner', $movie?->banner) }}" placeholder="https://image.tmdb.org/t/p/...">
         @error('banner')<p class="form-error">{{ $message }}</p>@enderror
     </div>
 </div>

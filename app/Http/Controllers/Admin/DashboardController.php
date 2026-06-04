@@ -57,6 +57,17 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->get();
 
+        // Closed schedules history
+        $closedSchedules = \App\Models\Schedule::with(['movie', 'studio.cinema'])
+            ->whereRaw("CONCAT(show_date, ' ', show_time) < ?", [now()->addMinutes(5)->toDateTimeString()])
+            ->withCount(['tickets' => function ($q) {
+                $q->whereHas('transaction', fn ($t) => $t->where('status', 'paid'));
+            }])
+            ->orderBy('show_date', 'desc')
+            ->orderBy('show_time', 'desc')
+            ->take(10)
+            ->get();
+
         return view('admin.dashboard', compact(
             'ticketRevenue',
             'fnbRevenue',
@@ -65,7 +76,8 @@ class DashboardController extends Controller
             'bestMovies',
             'recentTransactions',
             'userCount',
-            'monthlyRevenue'
+            'monthlyRevenue',
+            'closedSchedules'
         ));
     }
 }

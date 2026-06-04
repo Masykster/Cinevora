@@ -42,8 +42,8 @@ class OrderController extends Controller
     {
         $cafeOrder->advanceStatus();
 
-        // TODO: Broadcast event for real-time notification via Laravel Reverb
-        // event(new CafeOrderStatusChanged($cafeOrder));
+        // Broadcast event for real-time notification / DB notification
+        \App\Events\CafeOrderStatusChanged::dispatch($cafeOrder);
 
         return back()->with('success', "Pesanan #{$cafeOrder->transaction->invoice_number} status diubah ke: {$cafeOrder->status_badge}");
     }

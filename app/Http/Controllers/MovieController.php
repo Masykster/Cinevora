@@ -13,11 +13,19 @@ class MovieController extends Controller
     {
         $query = Movie::query();
 
-        // Filter by status
+        // Filter by status using dynamic scopes
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            if ($request->status === 'now_playing') {
+                $query->nowPlaying();
+            } elseif ($request->status === 'coming_soon') {
+                $query->comingSoon();
+            } else {
+                $query->where('status', $request->status);
+            }
         } else {
-            $query->whereIn('status', ['now_playing', 'coming_soon']);
+            $query->where(function ($q) {
+                $q->nowPlaying()->orWhere(fn($sq) => $sq->comingSoon());
+            });
         }
 
         // Filter by genre
@@ -47,19 +55,16 @@ class MovieController extends Controller
         $cinemas = Cinema::active()
             ->whereHas('studios.schedules', function ($q) use ($movie) {
                 $q->where('movie_id', $movie->id)
-                  ->where('show_date', '>=', now()->toDateString())
-                  ->where('is_active', true);
+                  ->bookable();
             })
             ->with(['studios' => function ($q) use ($movie) {
                 $q->whereHas('schedules', function ($sq) use ($movie) {
                     $sq->where('movie_id', $movie->id)
-                       ->where('show_date', '>=', now()->toDateString())
-                       ->where('is_active', true);
+                       ->bookable();
                 });
                 $q->with(['schedules' => function ($sq) use ($movie) {
                     $sq->where('movie_id', $movie->id)
-                       ->where('show_date', '>=', now()->toDateString())
-                       ->where('is_active', true)
+                       ->bookable()
                        ->orderBy('show_date')
                        ->orderBy('show_time');
                 }]);
@@ -68,8 +73,7 @@ class MovieController extends Controller
 
         // Get available dates
         $dates = Schedule::where('movie_id', $movie->id)
-            ->where('show_date', '>=', now()->toDateString())
-            ->where('is_active', true)
+            ->bookable()
             ->distinct()
             ->orderBy('show_date')
             ->pluck('show_date')

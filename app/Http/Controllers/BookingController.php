@@ -13,11 +13,13 @@ use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
-    /**
-     * Show seat selection for a schedule.
-     */
     public function selectSeats(Schedule $schedule)
     {
+        if (!$schedule->is_bookable) {
+            return redirect()->route('movies.show', $schedule->movie_id)
+                ->with('error', 'Pemesanan tiket untuk jadwal ini sudah ditutup.');
+        }
+
         $schedule->load(['movie', 'studio.cinema', 'studio.seats' => function ($q) {
             $q->where('is_active', true)->orderBy('row_label')->orderBy('seat_number');
         }]);
@@ -31,10 +33,14 @@ class BookingController extends Controller
     }
 
     /**
-     * Process seat selection and create pending transaction.
+     * Process seat selection and create pending transaction with 10-minute expiry.
      */
     public function processBooking(Request $request, Schedule $schedule)
     {
+        if (!$schedule->is_bookable) {
+            return back()->with('error', 'Pemesanan tiket untuk jadwal ini sudah ditutup.');
+        }
+
         $validated = $request->validate([
             'seat_ids' => 'required|array|min:1|max:8',
             'seat_ids.*' => 'exists:seats,id',
@@ -46,9 +52,21 @@ class BookingController extends Controller
         try {
             $transaction = DB::transaction(function () use ($schedule, $seatIds, $price) {
                 // Lock and verify seats are still available
+                // Check against both pending (not expired) and paid transactions
                 $bookedSeats = Ticket::where('schedule_id', $schedule->id)
                     ->whereIn('seat_id', $seatIds)
-                    ->whereHas('transaction', fn ($q) => $q->whereIn('status', ['pending', 'paid']))
+                    ->whereHas('transaction', fn ($q) => $q
+                        ->where(function ($sub) {
+                            $sub->where('status', 'paid')
+                                ->orWhere(function ($pending) {
+                                    $pending->where('status', 'pending')
+                                        ->where(function ($notExpired) {
+                                            $notExpired->whereNull('expires_at')
+                                                ->orWhere('expires_at', '>', now());
+                                        });
+                                });
+                        })
+                    )
                     ->lockForUpdate()
                     ->count();
 
@@ -56,7 +74,7 @@ class BookingController extends Controller
                     throw new \Exception('Beberapa kursi yang dipilih sudah dipesan. Silakan pilih kursi lain.');
                 }
 
-                // Create transaction
+                // Create transaction with 10-minute expiration
                 $total = count($seatIds) * $price;
                 $transaction = Transaction::create([
                     'user_id' => Auth::id(),
@@ -65,6 +83,7 @@ class BookingController extends Controller
                     'discount' => 0,
                     'grand_total' => $total,
                     'status' => 'pending',
+                    'expires_at' => now()->addMinutes(10),
                 ]);
 
                 // Create tickets
@@ -80,9 +99,6 @@ class BookingController extends Controller
 
                 return $transaction;
             });
-
-            // Store transaction ID in session for checkout
-            session(['current_transaction_id' => $transaction->id]);
 
             return redirect()->route('checkout.index', $transaction);
 

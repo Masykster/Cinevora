@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Notifications\Notifiable;
 
 class Transaction extends Model
 {
@@ -18,12 +19,18 @@ class Transaction extends Model
         'grand_total',
         'status',
         'paid_at',
+        'expires_at',
+        'xendit_invoice_id',
+        'xendit_invoice_url',
+        'payment_method',
+        'booking_code',
     ];
 
     protected function casts(): array
     {
         return [
             'paid_at' => 'datetime',
+            'expires_at' => 'datetime',
         ];
     }
 
@@ -36,7 +43,7 @@ class Transaction extends Model
 
     public function voucher(): BelongsTo
     {
-        return $this->belongsTo(Voucher::class);
+        return $this->belongsTo(Voucher::class)->withTrashed();
     }
 
     public function tickets(): HasMany
@@ -66,6 +73,36 @@ class Transaction extends Model
         return $query->where('status', 'pending');
     }
 
+    public function scopeExpired($query)
+    {
+        return $query->where('status', 'pending')
+            ->where('expires_at', '<', now());
+    }
+
+    // === Reservation Logic ===
+
+    /**
+     * Check if this pending transaction has expired.
+     */
+    public function isExpired(): bool
+    {
+        return $this->status === 'pending'
+            && $this->expires_at
+            && $this->expires_at->isPast();
+    }
+
+    /**
+     * Get the remaining seconds before expiry.
+     */
+    public function getRemainingSecondsAttribute(): int
+    {
+        if (!$this->expires_at || $this->status !== 'pending') {
+            return 0;
+        }
+
+        return max(0, (int) now()->diffInSeconds($this->expires_at, false));
+    }
+
     // === Helpers ===
 
     public static function generateInvoiceNumber(): string
@@ -79,6 +116,15 @@ class Transaction extends Model
     public function getFormattedGrandTotalAttribute(): string
     {
         return 'Rp ' . number_format($this->grand_total, 0, ',', '.');
+    }
+
+    public static function generateBookingCode(): string
+    {
+        do {
+            $code = str_pad(random_int(0, 99999), 5, '0', STR_PAD_LEFT);
+        } while (static::where('booking_code', $code)->exists());
+
+        return $code;
     }
 
     public function getTicketTotalAttribute(): int

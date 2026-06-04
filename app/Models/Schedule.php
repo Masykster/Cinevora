@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
 
 class Schedule extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'movie_id',
         'studio_id',
@@ -31,12 +33,12 @@ class Schedule extends Model
 
     public function movie(): BelongsTo
     {
-        return $this->belongsTo(Movie::class);
+        return $this->belongsTo(Movie::class)->withTrashed();
     }
 
     public function studio(): BelongsTo
     {
-        return $this->belongsTo(Studio::class);
+        return $this->belongsTo(Studio::class)->withTrashed();
     }
 
     public function tickets(): HasMany
@@ -56,7 +58,24 @@ class Schedule extends Model
         return $query->where('show_date', '>=', now()->toDateString());
     }
 
+    public function scopeBookable($query)
+    {
+        $cutoff = now()->addMinutes(5)->toDateTimeString();
+        return $query->where('is_active', true)
+            ->whereRaw("CONCAT(show_date, ' ', show_time) >= ?", [$cutoff]);
+    }
+
     // === Helpers ===
+
+    public function getIsBookableAttribute(): bool
+    {
+        if (!$this->is_active) {
+            return false;
+        }
+
+        $showDatetime = Carbon::parse($this->show_date->format('Y-m-d') . ' ' . $this->show_time);
+        return now()->addMinutes(5)->lessThanOrEqualTo($showDatetime);
+    }
 
     /**
      * Get the applicable price based on the show date (weekday vs weekend).

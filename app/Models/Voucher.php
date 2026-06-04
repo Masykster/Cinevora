@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
 
 class Voucher extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'code',
         'description',
@@ -17,6 +20,7 @@ class Voucher extends Model
         'quota',
         'used_count',
         'min_purchase',
+        'max_discount',
         'valid_from',
         'valid_until',
         'is_active',
@@ -41,7 +45,7 @@ class Voucher extends Model
     // === Validation ===
 
     /**
-     * Check if the voucher can be used.
+     * Check if the voucher can be used (general validity).
      */
     public function isValid(): bool
     {
@@ -50,6 +54,17 @@ class Voucher extends Model
         return $this->is_active
             && $this->used_count < $this->quota
             && $now->between($this->valid_from, $this->valid_until);
+    }
+
+    /**
+     * Check if the voucher has already been used by a specific user.
+     */
+    public function hasBeenUsedBy(int $userId): bool
+    {
+        return $this->transactions()
+            ->where('user_id', $userId)
+            ->whereIn('status', ['paid'])
+            ->exists();
     }
 
     /**
@@ -75,12 +90,19 @@ class Voucher extends Model
     }
 
     /**
-     * Calculate discount amount.
+     * Calculate discount amount (with cap via max_discount).
      */
     public function calculateDiscount(int $amount): int
     {
         if ($this->type === 'percentage') {
-            return (int) round($amount * $this->value / 100);
+            $discount = (int) round($amount * $this->value / 100);
+
+            // Apply max_discount cap if set
+            if ($this->max_discount && $discount > $this->max_discount) {
+                $discount = $this->max_discount;
+            }
+
+            return $discount;
         }
 
         // Fixed amount: discount cannot exceed the total

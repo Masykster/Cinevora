@@ -24,7 +24,7 @@ class Ticket extends Model
 
     public function schedule(): BelongsTo
     {
-        return $this->belongsTo(Schedule::class);
+        return $this->belongsTo(Schedule::class)->withTrashed();
     }
 
     public function seat(): BelongsTo

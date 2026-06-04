@@ -2,43 +2,77 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="@yield('meta_description', 'Cinevora - Sistem Booking Cinema & Cafe Terbaik di Indonesia')">
+    <meta name="description" content="@yield('meta_description', 'Cinevora - Booking Cinema & Cafe')">
 
-    <title>@yield('title', 'Cinevora') - Cinema & Cafe</title>
+    <title>@yield('title', 'Cinevora')</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Using BoxIcons for mobile nav icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         :root {
-            --clr-bg: #0a0a12;
-            --clr-surface: #12121e;
-            --clr-surface-2: #1a1a2e;
-            --clr-surface-3: #24243a;
-            --clr-border: #2a2a44;
-            --clr-primary: #7c3aed;
-            --clr-primary-light: #a78bfa;
-            --clr-accent: #f59e0b;
-            --clr-accent-light: #fbbf24;
-            --clr-text: #e2e8f0;
-            --clr-text-muted: #94a3b8;
-            --clr-success: #10b981;
-            --clr-error: #ef4444;
-            --clr-warning: #f59e0b;
-            --radius: 12px;
-            --radius-lg: 16px;
-            --radius-full: 9999px;
-            --font-heading: 'Outfit', sans-serif;
+            /* High-Contrast Immersive Dark Theme (myvue.com style) */
+            --clr-bg: #000000;
+            --clr-surface: #0a0a0a;
+            --clr-surface-2: #121212;
+            --clr-surface-3: #1c1c1e;
+            --clr-border: #1f1f23;
+            --clr-border-dark: #2d2d30;
+            
+            /* Vue Solar Orange / Warm Tone */
+            --clr-primary: #ff5a00; 
+            --clr-primary-light: #ff782e;
+            --clr-primary-dim: rgba(255, 90, 0, 0.08);
+            
+            --clr-accent: #ff5a00;
+            --clr-accent-light: #ff782e;
+            
+            /* Text Hierarchy */
+            --clr-text: #ffffff;
+            --clr-text-muted: #8d8f99;
+            
+            --clr-success: #10B981;
+            --clr-error: #EF4444;
+            
+            /* Rectangular styling */
+            --radius-sm: 2px;
+            --radius: 4px;
+            --radius-lg: 6px;
+            --radius-full: 4px;
+            
+            --font-heading: 'Oswald', sans-serif;
             --font-body: 'Inter', sans-serif;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            --nav-height: 72px;
+            --bottom-nav-height: 64px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* Sleek custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--clr-primary);
+        }
 
         body {
             font-family: var(--font-body);
@@ -46,319 +80,369 @@
             color: var(--clr-text);
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            width: 100%;
         }
 
-        /* === NAVBAR === */
+        /* === TOP NAVBAR === */
         .navbar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            background: rgba(10, 10, 18, 0.85);
-            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--clr-border);
-            padding: 0 2rem;
-            height: 72px;
+            height: var(--nav-height);
             display: flex; align-items: center; justify-content: space-between;
+            padding: 0 2rem;
             transition: var(--transition);
         }
 
         .navbar-brand {
             font-family: var(--font-heading);
-            font-size: 1.6rem; font-weight: 800;
-            background: linear-gradient(135deg, var(--clr-primary-light), var(--clr-accent));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
-
-        .navbar-links {
-            display: flex; align-items: center; gap: 0.5rem;
-            list-style: none;
-        }
-
-        .navbar-links a {
-            color: var(--clr-text-muted);
-            text-decoration: none; font-size: 0.9rem; font-weight: 500;
-            padding: 0.5rem 1rem; border-radius: var(--radius);
-            transition: var(--transition);
-        }
-        .navbar-links a:hover, .navbar-links a.active {
+            font-size: 1.8rem; font-weight: 700;
             color: var(--clr-text);
-            background: var(--clr-surface-2);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            text-transform: lowercase;
+            display: flex; align-items: center; gap: 0.1rem;
+        }
+        
+        .navbar-brand span {
+            color: var(--clr-primary);
         }
 
-        .navbar-auth {
-            display: flex; align-items: center; gap: 0.75rem;
-        }
-
-        .navbar-user {
-            display: flex; align-items: center; gap: 0.5rem;
-            color: var(--clr-text); font-size: 0.9rem; font-weight: 500;
-            text-decoration: none; padding: 0.4rem 1rem;
-            border-radius: var(--radius-full);
+        .location-pill {
+            display: flex; align-items: center; gap: 0.4rem;
             background: var(--clr-surface-2); border: 1px solid var(--clr-border);
+            padding: 0.45rem 1rem; border-radius: var(--radius);
+            font-size: 0.75rem; font-weight: 700; color: var(--clr-text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            user-select: none;
+        }
+        .location-pill:hover {
+            background: var(--clr-surface-3);
+            border-color: var(--clr-primary);
+        }
+        .location-pill .pill-chevron {
+            font-size: 1rem;
+            transition: transform 0.2s ease;
+        }
+        .location-pill.open .pill-chevron {
+            transform: rotate(180deg);
+        }
+
+        /* City Dropdown */
+        .city-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--clr-surface-2);
+            border: 1px solid var(--clr-border);
+            border-radius: var(--radius);
+            min-width: 200px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(-8px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+            overflow: hidden;
+        }
+        .city-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .city-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.7rem 1.1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--clr-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: var(--font-heading);
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--clr-border);
+        }
+        .city-dropdown-item:last-child {
+            border-bottom: none;
+        }
+        .city-dropdown-item:hover {
+            background: var(--clr-surface-3);
+            color: #fff;
+        }
+        .city-dropdown-item.active {
+            color: var(--clr-primary);
+            background: var(--clr-primary-dim);
+        }
+        .city-dropdown-item .check-icon {
+            font-size: 1rem;
+            opacity: 0;
+        }
+        .city-dropdown-item.active .check-icon {
+            opacity: 1;
+        }
+
+        /* Desktop specific nav right side */
+        .desktop-nav {
+            display: flex; align-items: center; gap: 1.5rem;
+        }
+
+        .desktop-nav a.nav-link {
+            font-family: var(--font-heading);
+            color: var(--clr-text-muted); text-decoration: none;
+            font-weight: 600; font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
             transition: var(--transition);
         }
-        .navbar-user:hover { border-color: var(--clr-primary); }
-
-        .navbar-user .avatar {
-            width: 28px; height: 28px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--clr-primary), var(--clr-accent));
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem; font-weight: 700; color: #fff;
+        .desktop-nav a.nav-link:hover, .desktop-nav a.nav-link.active {
+            color: var(--clr-primary);
         }
 
         /* === BUTTONS === */
         .btn {
             display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
             padding: 0.65rem 1.5rem; border-radius: var(--radius);
-            font-family: var(--font-body); font-size: 0.875rem; font-weight: 600;
+            font-family: var(--font-heading); font-size: 0.9rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px;
             text-decoration: none; cursor: pointer; border: none;
             transition: var(--transition);
         }
         .btn-primary {
-            background: linear-gradient(135deg, var(--clr-primary), #6d28d9);
-            color: #fff; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+            background: var(--clr-primary); color: #000000;
         }
-        .btn-primary:hover {
-            box-shadow: 0 6px 25px rgba(124, 58, 237, 0.5);
-            transform: translateY(-1px);
+        .btn-primary:active, .btn-primary:hover { 
+            background: var(--clr-primary-light); 
+            box-shadow: 0 4px 20px rgba(255, 90, 0, 0.45);
         }
-        .btn-accent {
-            background: linear-gradient(135deg, var(--clr-accent), #d97706);
-            color: #1a1a2e; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-        }
-        .btn-accent:hover {
-            box-shadow: 0 6px 25px rgba(245, 158, 11, 0.5);
-            transform: translateY(-1px);
-        }
+        
         .btn-outline {
-            background: transparent; color: var(--clr-text);
-            border: 1px solid var(--clr-border);
+            background: transparent; color: var(--clr-primary);
+            border: 2px solid var(--clr-primary);
+            padding: 0.55rem 1.4rem;
         }
-        .btn-outline:hover { border-color: var(--clr-primary); color: var(--clr-primary-light); }
-        .btn-ghost {
-            background: transparent; color: var(--clr-text-muted);
+        .btn-outline:active, .btn-outline:hover { 
+            background: var(--clr-primary); 
+            color: #000000; 
+            box-shadow: 0 4px 15px rgba(255, 90, 0, 0.25);
         }
-        .btn-ghost:hover { color: var(--clr-text); background: var(--clr-surface-2); }
-        .btn-danger {
-            background: var(--clr-error); color: #fff;
-        }
-        .btn-danger:hover { background: #dc2626; transform: translateY(-1px); }
-        .btn-sm { padding: 0.4rem 1rem; font-size: 0.8rem; }
-        .btn-lg { padding: 0.85rem 2rem; font-size: 1rem; }
+        
+        .btn-ghost { background: transparent; color: var(--clr-text-muted); }
+        .btn-ghost:active, .btn-ghost:hover { color: var(--clr-text); background: var(--clr-surface-2); }
+        
+        .btn-danger { background: var(--clr-error); color: #fff; }
+        .btn-sm { padding: 0.45rem 1.15rem; font-size: 0.75rem; }
         .btn-block { width: 100%; }
 
         /* === CARDS === */
         .card {
             background: var(--clr-surface);
             border: 1px solid var(--clr-border);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             overflow: hidden;
-            transition: var(--transition);
-        }
-        .card:hover {
-            border-color: var(--clr-surface-3);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-        .card-glass {
-            background: rgba(18, 18, 30, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.06);
         }
 
         /* === FORM ELEMENTS === */
-        .form-group { margin-bottom: 1.25rem; }
+        .form-group { margin-bottom: 1rem; }
         .form-label {
-            display: block; font-size: 0.85rem; font-weight: 600;
+            display: block; font-size: 0.75rem; font-weight: 700;
             color: var(--clr-text-muted); margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .form-input, .form-select, .form-textarea {
-            width: 100%; padding: 0.7rem 1rem;
+            width: 100%; padding: 0.8rem 1.1rem;
             background: var(--clr-surface-2); border: 1px solid var(--clr-border);
             border-radius: var(--radius); color: var(--clr-text);
-            font-family: var(--font-body); font-size: 0.9rem;
-            transition: var(--transition); outline: none;
+            font-family: var(--font-body); font-size: 0.9rem; outline: none;
+            transition: var(--transition);
         }
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            border-color: var(--clr-primary);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
-        }
-        .form-textarea { resize: vertical; min-height: 100px; }
-        .form-error { color: var(--clr-error); font-size: 0.8rem; margin-top: 0.3rem; }
-        .form-checkbox {
-            display: flex; align-items: center; gap: 0.5rem;
-            font-size: 0.9rem; cursor: pointer;
-        }
-        .form-checkbox input[type="checkbox"] {
-            width: 18px; height: 18px; accent-color: var(--clr-primary);
+        .form-input:focus, .form-select:focus { 
+            border-color: var(--clr-primary); 
+            box-shadow: 0 0 0 2px var(--clr-primary-dim); 
         }
 
         /* === ALERTS === */
         .alert {
             padding: 1rem 1.25rem; border-radius: var(--radius);
-            font-size: 0.9rem; margin-bottom: 1rem;
-            display: flex; align-items: center; gap: 0.75rem;
-            animation: slideDown 0.3s ease;
+            font-size: 0.85rem; margin-bottom: 1rem;
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            border: 1px solid transparent;
         }
-        .alert-success { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; }
-        .alert-error { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; }
-        .alert-warning { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; }
-
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .alert-success { background: #062419; border-color: #0d5339; color: #52e5a4; }
+        .alert-error { background: #2a0808; border-color: #5c1818; color: #ff8c8c; }
+        .badge-yellow { background: #3b1e06; border-color: #693c0d; color: #ffb66c; }
 
         /* === BADGE === */
         .badge {
-            display: inline-flex; align-items: center; gap: 0.3rem;
-            padding: 0.2rem 0.6rem; border-radius: var(--radius-full);
-            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            display: inline-flex; align-items: center; padding: 0.2rem 0.6rem;
+            border-radius: var(--radius-sm); font-size: 0.7rem; font-weight: 700;
+            background: var(--clr-surface-3); color: var(--clr-text);
+            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .badge-primary { background: rgba(124, 58, 237, 0.15); color: var(--clr-primary-light); }
-        .badge-accent { background: rgba(245, 158, 11, 0.15); color: var(--clr-accent-light); }
-        .badge-success { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-        .badge-error { background: rgba(239, 68, 68, 0.15); color: #f87171; }
-        .badge-gray { background: rgba(148, 163, 184, 0.15); color: var(--clr-text-muted); }
-        .badge-yellow { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
-        .badge-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
-        .badge-green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-
-        /* === LAYOUT === */
-        .main-content { padding-top: 72px; min-height: 100vh; }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
-        .section { padding: 3rem 0; }
-
-        /* === TABLE === */
-        .table-wrapper { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--clr-border); }
-        .table { width: 100%; border-collapse: collapse; }
-        .table th {
-            text-align: left; padding: 0.9rem 1rem;
-            background: var(--clr-surface-2); font-size: 0.8rem;
-            font-weight: 600; color: var(--clr-text-muted);
-            text-transform: uppercase; letter-spacing: 0.5px;
+        .badge-age {
+            background: #111; color: #fff; border: 1px solid var(--clr-border-dark);
+            border-radius: var(--radius-sm); padding: 2px 6px; font-weight: 800; font-size: 0.7rem;
         }
-        .table td {
-            padding: 0.85rem 1rem; font-size: 0.9rem;
-            border-top: 1px solid var(--clr-border);
-        }
-        .table tr:hover td { background: var(--clr-surface-2); }
-
-        /* === PAGINATION === */
-        .pagination {
-            display: flex; align-items: center; justify-content: center; gap: 0.25rem;
-            margin-top: 2rem; list-style: none;
-        }
-        .pagination li a, .pagination li span {
-            display: flex; align-items: center; justify-content: center;
-            min-width: 36px; height: 36px; padding: 0 0.5rem;
-            border-radius: var(--radius); font-size: 0.85rem; font-weight: 500;
-            color: var(--clr-text-muted); background: var(--clr-surface);
-            border: 1px solid var(--clr-border); text-decoration: none;
-            transition: var(--transition);
-        }
-        .pagination li a:hover { border-color: var(--clr-primary); color: var(--clr-primary-light); }
-        .pagination li.active span {
-            background: var(--clr-primary); color: #fff; border-color: var(--clr-primary);
-        }
-        .pagination li.disabled span { opacity: 0.4; cursor: not-allowed; }
-
-        /* === FOOTER === */
-        .footer {
-            background: var(--clr-surface);
-            border-top: 1px solid var(--clr-border);
-            padding: 2.5rem 2rem 1.5rem;
-            margin-top: 4rem;
-        }
-        .footer-content {
-            max-width: 1280px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: flex-start;
-            flex-wrap: wrap; gap: 2rem;
-        }
-        .footer-brand { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; }
-        .footer-text { color: var(--clr-text-muted); font-size: 0.85rem; margin-top: 0.5rem; }
-        .footer-links { list-style: none; display: flex; gap: 1.5rem; }
-        .footer-links a { color: var(--clr-text-muted); font-size: 0.85rem; text-decoration: none; transition: var(--transition); }
-        .footer-links a:hover { color: var(--clr-text); }
-        .footer-bottom {
-            max-width: 1280px; margin: 1.5rem auto 0;
-            padding-top: 1rem; border-top: 1px solid var(--clr-border);
-            text-align: center; color: var(--clr-text-muted); font-size: 0.8rem;
+        .badge-rating {
+            background: var(--clr-primary); color: #000; border-radius: var(--radius-sm);
         }
 
-        /* === UTILITIES === */
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
-        .text-muted { color: var(--clr-text-muted); }
-        .text-accent { color: var(--clr-accent); }
-        .text-primary { color: var(--clr-primary-light); }
-        .text-success { color: #34d399; }
-        .text-error { color: #f87171; }
-        .text-sm { font-size: 0.85rem; }
-        .text-xs { font-size: 0.75rem; }
-        .text-lg { font-size: 1.15rem; }
-        .font-heading { font-family: var(--font-heading); }
-        .font-bold { font-weight: 700; }
-        .font-semibold { font-weight: 600; }
-        .mt-1 { margin-top: 0.5rem; } .mt-2 { margin-top: 1rem; } .mt-3 { margin-top: 1.5rem; } .mt-4 { margin-top: 2rem; }
-        .mb-1 { margin-bottom: 0.5rem; } .mb-2 { margin-bottom: 1rem; } .mb-3 { margin-bottom: 1.5rem; } .mb-4 { margin-bottom: 2rem; }
-        .flex { display: flex; } .flex-wrap { flex-wrap: wrap; } .items-center { align-items: center; } .justify-between { justify-content: space-between; }
-        .gap-1 { gap: 0.5rem; } .gap-2 { gap: 1rem; } .gap-3 { gap: 1.5rem; }
+        /* === GRID SYSTEM === */
         .grid { display: grid; }
         .grid-2 { grid-template-columns: repeat(2, 1fr); }
         .grid-3 { grid-template-columns: repeat(3, 1fr); }
         .grid-4 { grid-template-columns: repeat(4, 1fr); }
-        .hidden { display: none; }
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+        .gap-3 { gap: 1.5rem; }
+        .gap-4 { gap: 2rem; }
 
-        /* Mobile menu */
-        .mobile-toggle { display: none; background: none; border: none; color: var(--clr-text); font-size: 1.5rem; cursor: pointer; }
+        /* === LAYOUT === */
+        .main-content { 
+            padding-top: var(--nav-height); 
+            min-height: calc(100vh - var(--nav-height) - var(--bottom-nav-height));
+            padding-bottom: 3rem;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+        .section { padding: 2.5rem 0; }
 
-        @media (max-width: 768px) {
-            .navbar { padding: 0 1rem; }
-            .mobile-toggle { display: block; }
-            .navbar-links {
-                display: none; position: absolute; top: 72px; left: 0; right: 0;
-                background: var(--clr-surface); border-bottom: 1px solid var(--clr-border);
-                flex-direction: column; padding: 1rem;
-            }
-            .navbar-links.open { display: flex; }
-            .container { padding: 0 1rem; }
-            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-            .footer-content { flex-direction: column; align-items: center; text-align: center; }
+        /* === MOBILE BOTTOM NAV === */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+            background: #080808;
+            border-top: 1px solid var(--clr-border);
+            height: var(--bottom-nav-height);
+            display: flex; justify-content: space-around; align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+            display: none; /* Hidden on desktop */
         }
 
-        @media (max-width: 1024px) {
-            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+        .bottom-nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: var(--clr-text-muted); text-decoration: none;
+            gap: 4px; width: 100%; height: 100%;
+            transition: var(--transition);
+        }
+        .bottom-nav-item i { font-size: 1.35rem; }
+        .bottom-nav-item span { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .bottom-nav-item.active { color: var(--clr-primary); }
+
+        /* === UTILITIES === */
+        .text-center { text-align: center; }
+        .text-muted { color: var(--clr-text-muted); }
+        .text-primary { color: var(--clr-primary); }
+        .text-sm { font-size: 0.85rem; }
+        .text-xs { font-size: 0.75rem; }
+        .font-heading { font-family: var(--font-heading); }
+        .font-bold { font-weight: 700; }
+        .mt-1 { margin-top: 0.5rem; } .mb-1 { margin-bottom: 0.5rem; }
+        .mt-2 { margin-top: 1rem; } .mb-2 { margin-bottom: 1rem; }
+        .mt-3 { margin-top: 1.5rem; } .mb-3 { margin-bottom: 1.5rem; }
+        
+        /* Typography overrides */
+        h1, h2, h3, h4 { color: var(--clr-text); font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .desktop-nav { display: none; }
+            .bottom-nav { display: flex; }
+            .main-content { padding-bottom: calc(var(--bottom-nav-height) + 1.5rem); }
+            .footer { display: none; } /* Hide heavy footer on mobile */
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+        }
+        
+        @media (min-width: 769px) {
+            .container { padding: 0 2.5rem; }
+            .section { padding: 3.5rem 0; }
+            /* Footer for desktop */
+            .footer {
+                background: #070707; border-top: 1px solid var(--clr-border);
+                padding: 4rem 2rem; margin-top: 4rem;
+            }
+            .footer-content {
+                max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between;
+            }
         }
     </style>
 
     @stack('styles')
 </head>
 <body>
-    {{-- NAVBAR --}}
+    {{-- TOP NAVBAR --}}
     <nav class="navbar" id="navbar">
-        <a href="{{ route('home') }}" class="navbar-brand">CINEVORA</a>
+        <a href="{{ route('home') }}" class="navbar-brand">Cine<span>vora</span></a>
 
-        <button class="mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Toggle menu">☰</button>
-
-        <ul class="navbar-links" id="navLinks">
-            <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
-            <li><a href="{{ route('movies.index') }}" class="{{ request()->routeIs('movies.*') ? 'active' : '' }}">Movies</a></li>
-            <li><a href="{{ route('cafe.menu') }}" class="{{ request()->routeIs('cafe.menu') ? 'active' : '' }}">Cafe Menu</a></li>
-        </ul>
-
-        <div class="navbar-auth">
+        {{-- Desktop Menu --}}
+        <div class="desktop-nav">
+            <div class="location-pill" id="cityPillDesktop" onclick="toggleCityDropdown('desktop')">
+                <i class='bx bx-map'></i>
+                <span id="cityLabelDesktop">{{ request()->cookie('cinevora_city', 'Semua Kota') }}</span>
+                <i class='bx bx-chevron-down pill-chevron'></i>
+                <div class="city-dropdown" id="cityDropdownDesktop">
+                    <div class="city-dropdown-item {{ !request()->cookie('cinevora_city') ? 'active' : '' }}" onclick="selectCity('', event)">
+                        <i class='bx bx-check check-icon'></i> Semua Kota
+                    </div>
+                    @foreach($navCities as $city)
+                    <div class="city-dropdown-item {{ request()->cookie('cinevora_city') === $city ? 'active' : '' }}" onclick="selectCity('{{ $city }}', event)">
+                        <i class='bx bx-check check-icon'></i> {{ $city }}
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            <div style="width: 1px; height: 20px; background: var(--clr-border); margin: 0 0.5rem;"></div>
+            <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Bioskop</a>
+            <a href="{{ route('movies.index') }}" class="nav-link {{ request()->routeIs('movies.*') ? 'active' : '' }}">Film</a>
+            <a href="{{ route('cafe.menu') }}" class="nav-link {{ request()->routeIs('cafe.menu') ? 'active' : '' }}">Cafe</a>
+            
+            <div style="width: 1px; height: 20px; background: var(--clr-border); margin: 0 0.5rem;"></div>
+            
             @auth
-                <a href="{{ route('profile.index') }}" class="navbar-user">
-                    <span class="avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
-                    <span>{{ Auth::user()->name }}</span>
+                <a href="{{ route('profile.index') }}" class="nav-link" style="display:flex; align-items:center; gap:0.5rem;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:var(--clr-primary);color:white;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:bold;">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+                    {{ Auth::user()->name }}
                 </a>
-                <form method="POST" action="{{ route('logout') }}" style="display:inline;">
-                    @csrf
-                    <button type="submit" class="btn btn-ghost btn-sm">Logout</button>
-                </form>
             @else
-                <a href="{{ route('login') }}" class="btn btn-ghost btn-sm">Login</a>
-                <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Daftar</a>
+                <a href="{{ route('login') }}" class="nav-link">Login</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Buat akun</a>
             @endauth
         </div>
+
+        {{-- Mobile Top Right --}}
+        <div class="desktop-nav" style="display: flex; gap: 0.5rem;" id="mobileTopRight">
+             <div class="location-pill" id="cityPillMobile" onclick="toggleCityDropdown('mobile')" style="font-size: 0.7rem; padding: 0.3rem 0.6rem;">
+                <i class='bx bx-map'></i>
+                <span id="cityLabelMobile">{{ request()->cookie('cinevora_city', 'Semua Kota') }}</span>
+                <i class='bx bx-chevron-down pill-chevron'></i>
+                <div class="city-dropdown" id="cityDropdownMobile">
+                    <div class="city-dropdown-item {{ !request()->cookie('cinevora_city') ? 'active' : '' }}" onclick="selectCity('', event)">
+                        <i class='bx bx-check check-icon'></i> Semua Kota
+                    </div>
+                    @foreach($navCities as $city)
+                    <div class="city-dropdown-item {{ request()->cookie('cinevora_city') === $city ? 'active' : '' }}" onclick="selectCity('{{ $city }}', event)">
+                        <i class='bx bx-check check-icon'></i> {{ $city }}
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        <style>
+            @media (min-width: 769px) { #mobileTopRight { display: none !important; } }
+        </style>
     </nav>
 
     {{-- FLASH MESSAGES --}}
@@ -366,12 +450,12 @@
         <div class="container">
             @if(session('success'))
                 <div class="alert alert-success" style="margin-top: 1rem;">
-                    <span>✓</span> {{ session('success') }}
+                    <i class='bx bx-check-circle'></i> <span>{{ session('success') }}</span>
                 </div>
             @endif
             @if(session('error'))
                 <div class="alert alert-error" style="margin-top: 1rem;">
-                    <span>✕</span> {{ session('error') }}
+                    <i class='bx bx-x-circle'></i> <span>{{ session('error') }}</span>
                 </div>
             @endif
         </div>
@@ -379,31 +463,92 @@
         @yield('content')
     </div>
 
-    {{-- FOOTER --}}
+    {{-- MOBILE BOTTOM NAV --}}
+    <nav class="bottom-nav">
+        <a href="{{ route('home') }}" class="bottom-nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
+            <i class='bx {{ request()->routeIs('home') ? 'bxs-home' : 'bx-home' }}'></i>
+            <span>Beranda</span>
+        </a>
+        <a href="{{ route('cinemas.index') }}" class="bottom-nav-item {{ request()->routeIs('cinemas.*') ? 'active' : '' }}">
+            <i class='bx {{ request()->routeIs('cinemas.*') ? 'bxs-building' : 'bx-building' }}'></i>
+            <span>Bioskop</span>
+        </a>
+        <a href="{{ route('movies.index') }}" class="bottom-nav-item {{ request()->routeIs('movies.*') ? 'active' : '' }}">
+            <i class='bx {{ request()->routeIs('movies.*') ? 'bxs-film' : 'bx-film' }}'></i>
+            <span>Film</span>
+        </a>
+        <a href="{{ route('cafe.menu') }}" class="bottom-nav-item {{ request()->routeIs('cafe.menu') ? 'active' : '' }}">
+            <i class='bx {{ request()->routeIs('cafe.menu') ? 'bxs-coffee-togo' : 'bx-coffee-togo' }}'></i>
+            <span>m.food</span>
+        </a>
+        <a href="{{ route(Auth::check() ? 'profile.index' : 'login') }}" class="bottom-nav-item {{ request()->routeIs('profile.*') || request()->routeIs('login') ? 'active' : '' }}">
+            <i class='bx {{ (request()->routeIs('profile.*') || request()->routeIs('login')) ? 'bxs-user' : 'bx-user' }}'></i>
+            <span>Akun</span>
+        </a>
+    </nav>
+
+    {{-- DESKTOP FOOTER --}}
     <footer class="footer">
         <div class="footer-content">
             <div>
-                <div class="footer-brand" style="background: linear-gradient(135deg, var(--clr-primary-light), var(--clr-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CINEVORA</div>
-                <p class="footer-text">Cinema & Cafe Booking System</p>
+                <div style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700; color: var(--clr-text); text-transform: lowercase; letter-spacing: 0.5px;">cine<span style="color: var(--clr-primary);">vora</span></div>
+                <p class="text-muted text-sm mt-1">Sistem Booking Cinema & Cafe</p>
+                <p class="text-xs text-muted mt-2">© {{ date('Y') }} Cinevora. All rights reserved.</p>
             </div>
-            <ul class="footer-links">
-                <li><a href="{{ route('home') }}">Home</a></li>
-                <li><a href="{{ route('movies.index') }}">Movies</a></li>
-                <li><a href="{{ route('cafe.menu') }}">Cafe</a></li>
-            </ul>
+            <div style="display:flex; gap: 3rem;">
+                <div>
+                    <h4 class="font-bold mb-2" style="font-size: 0.95rem; color: #fff;">Menu</h4>
+                    <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:0.50rem; font-size:0.85rem;">
+                        <li><a href="{{ route('home') }}" class="footer-link" style="color:var(--clr-text-muted); text-decoration:none; transition: var(--transition);">Bioskop</a></li>
+                        <li><a href="{{ route('movies.index') }}" class="footer-link" style="color:var(--clr-text-muted); text-decoration:none; transition: var(--transition);">Film</a></li>
+                        <li><a href="{{ route('cafe.menu') }}" class="footer-link" style="color:var(--clr-text-muted); text-decoration:none; transition: var(--transition);">Cafe Box</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="footer-bottom">
-            © {{ date('Y') }} Cinevora. All rights reserved.
-        </div>
+        <style>
+            .footer-link:hover {
+                color: var(--clr-primary) !important;
+            }
+        </style>
     </footer>
 
-    @stack('scripts')
-
+    {{-- City Selector Script --}}
     <script>
-        // Auto-dismiss alerts after 5s
-        document.querySelectorAll('.alert').forEach(el => {
-            setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(-10px)'; setTimeout(() => el.remove(), 300); }, 5000);
-        });
+    function toggleCityDropdown(type) {
+        const dropdown = document.getElementById('cityDropdown' + (type === 'desktop' ? 'Desktop' : 'Mobile'));
+        const pill = document.getElementById('cityPill' + (type === 'desktop' ? 'Desktop' : 'Mobile'));
+        const isOpen = dropdown.classList.contains('show');
+        // Close all dropdowns first
+        document.querySelectorAll('.city-dropdown').forEach(d => d.classList.remove('show'));
+        document.querySelectorAll('.location-pill').forEach(p => p.classList.remove('open'));
+        if (!isOpen) {
+            dropdown.classList.add('show');
+            pill.classList.add('open');
+        }
+    }
+
+    function selectCity(city, event) {
+        event.stopPropagation();
+        // Set cookie (30 days)
+        if (city) {
+            document.cookie = 'cinevora_city=' + encodeURIComponent(city) + ';path=/;max-age=' + (30*86400) + ';SameSite=Lax';
+        } else {
+            document.cookie = 'cinevora_city=;path=/;max-age=0;SameSite=Lax';
+        }
+        // Reload to apply filter
+        window.location.reload();
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.location-pill')) {
+            document.querySelectorAll('.city-dropdown').forEach(d => d.classList.remove('show'));
+            document.querySelectorAll('.location-pill').forEach(p => p.classList.remove('open'));
+        }
+    });
     </script>
+
+    @stack('scripts')
 </body>
 </html>

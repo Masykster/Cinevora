@@ -17,8 +17,6 @@ return new class extends Migration
             $table->string('barcode')->unique();
             $table->timestamps();
 
-            // Prevent double-booking: same seat on same schedule
-            $table->unique(['schedule_id', 'seat_id']);
         });
     }
 

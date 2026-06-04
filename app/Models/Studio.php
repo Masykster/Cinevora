@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Studio extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'cinema_id',
         'name',
@@ -23,6 +25,36 @@ class Studio extends Model
         return [
             'is_active' => 'boolean',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Studio $studio) {
+            $studio->capacity = $studio->rows * $studio->cols;
+        });
+
+        static::created(function (Studio $studio) {
+            $seats = [];
+            $now = now();
+
+            for ($r = 0; $r < $studio->rows; $r++) {
+                $rowLabel = chr(65 + $r); // A, B, C...
+                for ($c = 1; $c <= $studio->cols; $c++) {
+                    $seats[] = [
+                        'studio_id' => $studio->id,
+                        'row_label' => $rowLabel,
+                        'seat_number' => $c,
+                        'code' => $rowLabel . $c,
+                        'type' => 'regular',
+                        'is_active' => true,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ];
+                }
+            }
+
+            Seat::insert($seats);
+        });
     }
 
     // === Relationships ===

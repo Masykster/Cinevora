@@ -22,7 +22,27 @@ use App\Http\Controllers\Cafe\OrderController as CafeOrderController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
 Route::get('/movies/{movie}', [MovieController::class, 'show'])->name('movies.show');
+Route::get('/cinemas', [\App\Http\Controllers\PublicCinemaController::class, 'index'])->name('cinemas.index');
 Route::get('/cafe-menu', [CafeMenuController::class, 'index'])->name('cafe.menu');
+
+// Xendit Webhook (no auth, no CSRF)
+Route::post('/xendit/webhook', [\App\Http\Controllers\XenditWebhookController::class, 'handle'])->name('xendit.webhook');
+
+// Image proxy for html2canvas CORS bypass
+Route::get('/img-proxy', function (\Illuminate\Http\Request $request) {
+    $url = $request->query('url');
+    if (!$url || !str_starts_with($url, 'https://image.tmdb.org/')) {
+        abort(400);
+    }
+    try {
+        $response = \Illuminate\Support\Facades\Http::timeout(5)->get($url);
+        return response($response->body(), 200)
+            ->header('Content-Type', $response->header('Content-Type'))
+            ->header('Cache-Control', 'public, max-age=86400');
+    } catch (\Exception $e) {
+        abort(404);
+    }
+})->name('img.proxy');
 
 // ========================================
 // Authentication Routes
@@ -52,6 +72,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/checkout/{transaction}/voucher', [TransactionController::class, 'removeVoucher'])->name('checkout.removeVoucher');
     Route::post('/checkout/{transaction}/pay', [TransactionController::class, 'pay'])->name('checkout.pay');
     Route::get('/checkout/{transaction}/invoice', [TransactionController::class, 'invoice'])->name('checkout.invoice');
+    Route::get('/checkout/{transaction}/payment-pending', [TransactionController::class, 'paymentPending'])->name('checkout.paymentPending');
+    Route::get('/checkout/{transaction}/check-status', [TransactionController::class, 'checkPaymentStatus'])->name('checkout.checkStatus');
     Route::post('/checkout/{transaction}/cancel', [TransactionController::class, 'cancel'])->name('checkout.cancel');
 
     // Profile
@@ -61,8 +83,9 @@ Route::middleware('auth')->group(function () {
 });
 
 // ========================================
-// Cinema Admin Routes
+// Cinema Admin Routes (Replaced by Filament Admin Panel)
 // ========================================
+/*
 Route::middleware(['auth', 'role:cinema_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
@@ -86,6 +109,7 @@ Route::middleware(['auth', 'role:cinema_admin'])->prefix('admin')->name('admin.'
     Route::put('users/{user}', [AdminUserController::class, 'update'])->name('users.update');
     Route::post('users/{user}/toggle', [AdminUserController::class, 'toggleActive'])->name('users.toggle');
 });
+*/
 
 // ========================================
 // Cafe Admin Routes

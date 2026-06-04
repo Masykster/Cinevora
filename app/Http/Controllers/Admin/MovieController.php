@@ -40,21 +40,14 @@ class MovieController extends Controller
             'director' => 'required|string|max:255',
             'cast' => 'nullable|string|max:500',
             'duration' => 'required|integer|min:1',
-            'poster' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'banner' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'poster' => 'nullable|string|max:255',
+            'banner' => 'nullable|string|max:255',
             'trailer_url' => 'nullable|url',
             'rating' => 'required|numeric|min:0|max:10',
             'release_date' => 'required|date',
             'status' => 'required|in:now_playing,coming_soon,ended',
             'age_rating' => 'required|string|in:SU,13+,17+,21+',
         ]);
-
-        if ($request->hasFile('poster')) {
-            $validated['poster'] = $request->file('poster')->store('movies/posters', 'public');
-        }
-        if ($request->hasFile('banner')) {
-            $validated['banner'] = $request->file('banner')->store('movies/banners', 'public');
-        }
 
         Movie::create($validated);
 
@@ -75,28 +68,14 @@ class MovieController extends Controller
             'director' => 'required|string|max:255',
             'cast' => 'nullable|string|max:500',
             'duration' => 'required|integer|min:1',
-            'poster' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'banner' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'poster' => 'nullable|string|max:255',
+            'banner' => 'nullable|string|max:255',
             'trailer_url' => 'nullable|url',
             'rating' => 'required|numeric|min:0|max:10',
             'release_date' => 'required|date',
             'status' => 'required|in:now_playing,coming_soon,ended',
             'age_rating' => 'required|string|in:SU,13+,17+,21+',
         ]);
-
-        if ($request->hasFile('poster')) {
-            if ($movie->poster) {
-                Storage::disk('public')->delete($movie->poster);
-            }
-            $validated['poster'] = $request->file('poster')->store('movies/posters', 'public');
-        }
-
-        if ($request->hasFile('banner')) {
-            if ($movie->banner) {
-                Storage::disk('public')->delete($movie->banner);
-            }
-            $validated['banner'] = $request->file('banner')->store('movies/banners', 'public');
-        }
 
         $movie->update($validated);
 

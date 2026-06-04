@@ -6,7 +6,7 @@
 <div class="section" style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 200px);">
     <div class="card" style="width: 100%; max-width: 440px; padding: 2.5rem;">
         <div class="text-center mb-4">
-            <h1 class="font-heading" style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--clr-primary-light), var(--clr-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <h1 class="font-heading" style="font-size: 2rem; font-weight: 800; color: var(--clr-text);">
                 Buat Akun
             </h1>
             <p class="text-muted mt-1">Daftar untuk mulai booking</p>
@@ -47,7 +47,7 @@
         </form>
 
         <p class="text-center text-muted mt-3" style="font-size: 0.9rem;">
-            Sudah punya akun? <a href="{{ route('login') }}" style="color: var(--clr-primary-light); text-decoration: none; font-weight: 600;">Login</a>
+            Sudah punya akun? <a href="{{ route('login') }}" style="color: var(--clr-primary); text-decoration: none; font-weight: 600;">Login</a>
         </p>
     </div>
 </div>
