@@ -7,6 +7,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Schemas\Schema;
 use App\Services\TmdbService;
 use Illuminate\Support\Facades\Http;
@@ -67,17 +68,22 @@ class MovieForm
                                     $set('genre', $genres);
                                 }
 
-                                if (!empty($movie['credits'])) {
-                                    $crew = $movie['credits']['crew'] ?? [];
-                                    $director = collect($crew)->firstWhere('job', 'Director');
-                                    if ($director) {
-                                        $set('director', $director['name']);
-                                    }
+                                 if (!empty($movie['credits'])) {
+                                     $crew = $movie['credits']['crew'] ?? [];
+                                     $director = collect($crew)->firstWhere('job', 'Director');
+                                     if ($director) {
+                                         $set('director', $director['name']);
+                                     }
 
-                                    $cast = $movie['credits']['cast'] ?? [];
-                                    $topCast = collect($cast)->take(5)->pluck('name')->implode(', ');
-                                    $set('cast', $topCast);
-                                }
+                                     $cast = $movie['credits']['cast'] ?? [];
+                                     $topCast = collect($cast)->take(10)->pluck('name')->implode(', ');
+                                     $set('cast', $topCast);
+
+                                     $castImages = collect($cast)->take(10)->mapWithKeys(function ($actor) {
+                                         return [$actor['name'] => $actor['profile_path'] ? "https://image.tmdb.org/t/p/w185" . $actor['profile_path'] : null];
+                                     })->toArray();
+                                     $set('cast_images', $castImages);
+                                 }
 
                                 if (!empty($movie['poster_path'])) {
                                     $set('poster', "https://image.tmdb.org/t/p/w500" . $movie['poster_path']);
@@ -101,6 +107,7 @@ class MovieForm
                     ->maxLength(255),
                 TextInput::make('cast')
                     ->maxLength(500),
+                Hidden::make('cast_images'),
                 TextInput::make('duration')
                     ->required()
                     ->numeric()

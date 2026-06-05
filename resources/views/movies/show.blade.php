@@ -74,18 +74,38 @@
         <h3 class="font-heading" style="font-weight: 700; margin-bottom: 1rem; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; color: var(--clr-primary);">Sinopsis</h3>
         <p class="text-muted text-sm" style="line-height: 1.8; font-weight: 500; font-size: 0.9rem;">{{ $movie->synopsis }}</p>
         
-        <div style="margin-top: 2rem; display: flex; gap: 4rem; flex-wrap: wrap; border-top: 1px solid var(--clr-border); padding-top: 1.5rem;">
+        <div style="margin-top: 2rem; display: flex; gap: 4rem; flex-wrap: wrap; border-top: 1px solid var(--clr-border); padding-top: 1.5rem; margin-bottom: 2rem;">
             <div>
                 <span class="text-xs text-muted" style="display: block; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 0.4rem;">Sutradara</span>
                 <span style="font-size: 0.95rem; font-weight: 700; color: #fff; text-transform: uppercase; font-family: var(--font-heading); letter-spacing: 0.5px;">{{ $movie->director }}</span>
             </div>
-            @if($movie->cast)
-            <div>
-                <span class="text-xs text-muted" style="display: block; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 0.4rem;">Pemeran Utama</span>
-                <span style="font-size: 0.95rem; font-weight: 700; color: #fff; font-family: var(--font-heading); letter-spacing: 0.5px;">{{ $movie->cast }}</span>
-            </div>
-            @endif
         </div>
+
+        @if(count($movie->cast_list) > 0)
+        <div style="border-top: 1px solid var(--clr-border); padding-top: 1.5rem;">
+            <h3 class="font-heading" style="font-weight: 700; margin-bottom: 1.5rem; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; color: var(--clr-primary);">Pemeran</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 1.8rem; align-items: flex-start;">
+                @foreach($movie->cast_list as $actor)
+                    <div class="cast-member">
+                        {{-- Avatar Circle --}}
+                        @if(!empty($movie->cast_images) && isset($movie->cast_images[$actor]) && $movie->cast_images[$actor])
+                            <div class="cast-avatar">
+                                <img src="{{ $movie->cast_images[$actor] }}" alt="{{ $actor }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                            </div>
+                        @else
+                            <div class="cast-avatar cast-initials">
+                                {{ App\Models\Movie::getInitials($actor) }}
+                            </div>
+                        @endif
+                        {{-- Actor Name --}}
+                        <span class="cast-name">
+                            {{ $actor }}
+                        </span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
     </div>
 
     {{-- SCHEDULES --}}
@@ -447,6 +467,57 @@ document.addEventListener('keydown', function(e) {
         .trailer-modal-content {
             width: 95vw;
         }
+    }
+
+    /* Cast Section Styling */
+    .cast-member {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90px;
+        text-align: center;
+        gap: 0.6rem;
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .cast-member:hover {
+        transform: translateY(-4px);
+    }
+    .cast-avatar {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        background: var(--clr-surface-3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .cast-avatar.cast-initials {
+        background: #4b5563;
+        font-weight: 700;
+        color: #fff;
+        font-size: 1.25rem;
+        font-family: var(--font-heading);
+    }
+    .cast-member:hover .cast-avatar {
+        border-color: var(--clr-primary) !important;
+        box-shadow: 0 0 15px rgba(255, 90, 0, 0.45) !important;
+    }
+    .cast-name {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--clr-text-muted);
+        line-height: 1.3;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        max-width: 100%;
+        transition: color 0.25s ease;
+    }
+    .cast-member:hover .cast-name {
+        color: #fff;
     }
 </style>
 @endpush

@@ -15,6 +15,7 @@ class Movie extends Model
         'genre',
         'director',
         'cast',
+        'cast_images',
         'duration',
         'poster',
         'banner',
@@ -30,6 +31,7 @@ class Movie extends Model
         return [
             'release_date' => 'date',
             'rating' => 'decimal:1',
+            'cast_images' => 'array',
         ];
     }
 
@@ -102,5 +104,25 @@ class Movie extends Model
             }
         }
         return $this->poster_url;
+    }
+
+    public function getCastListAttribute(): array
+    {
+        if (!$this->cast) {
+            return [];
+        }
+        return array_map('trim', explode(',', $this->cast));
+    }
+
+    public static function getInitials(string $name): string
+    {
+        $words = explode(' ', trim($name));
+        $initials = '';
+        foreach ($words as $w) {
+            if (!empty($w)) {
+                $initials .= mb_substr($w, 0, 1, 'UTF-8');
+            }
+        }
+        return mb_strtoupper(mb_substr($initials, 0, 2, 'UTF-8'), 'UTF-8');
     }
 }
