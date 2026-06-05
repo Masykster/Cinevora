@@ -9,6 +9,7 @@ class CafeOrder extends Model
 {
     protected $fillable = [
         'transaction_id',
+        'cinema_id',
         'status',
         'notes',
         'prepared_at',
@@ -30,6 +31,11 @@ class CafeOrder extends Model
     public function transaction(): BelongsTo
     {
         return $this->belongsTo(Transaction::class);
+    }
+
+    public function cinema(): BelongsTo
+    {
+        return $this->belongsTo(Cinema::class);
     }
 
     // === Helpers ===

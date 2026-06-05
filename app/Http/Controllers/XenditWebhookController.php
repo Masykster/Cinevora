@@ -68,10 +68,10 @@ class XenditWebhookController extends Controller
 
             // Create cafe order if there are F&B items
             if ($transaction->orderItems()->count() > 0) {
-                CafeOrder::create([
-                    'transaction_id' => $transaction->id,
-                    'status' => 'pending',
-                ]);
+                CafeOrder::firstOrCreate(
+                    ['transaction_id' => $transaction->id],
+                    ['status' => 'pending']
+                );
             }
         });
 

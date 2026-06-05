@@ -15,7 +15,8 @@ class CafeMenuController extends Controller
         }])->get();
 
         $selectedCategory = $request->get('category');
+        $cinemas = \App\Models\Cinema::orderBy('name')->get();
 
-        return view('cafe.menu', compact('categories', 'selectedCategory'));
+        return view('cafe.menu', compact('categories', 'selectedCategory', 'cinemas'));
     }
 }

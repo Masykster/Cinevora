@@ -3,7 +3,7 @@
 @section('meta_description', 'Menu makanan dan minuman kafe Cinevora - Popcorn, snack, dan minuman segar untuk menemani film favorit Anda')
 
 @section('content')
-<section class="section" style="max-width: 1024px; margin: 0 auto;">
+<section class="section" style="max-width: 1024px; margin: 0 auto; position: relative;">
     <div class="container">
         <div class="text-center mb-5" style="border-bottom: 1px solid var(--clr-border); padding-bottom: 2rem;">
             <h1 class="font-heading" style="font-size: 2.2rem; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: -0.5px;">
@@ -38,7 +38,9 @@
                                     @if(!$product->is_available)
                                         <span class="badge" style="background: var(--clr-error); color: #fff; font-size: 0.6rem; text-transform: uppercase;">Habis</span>
                                     @else
-                                        <span class="badge" style="background: var(--clr-success); color: #fff; font-size: 0.6rem; text-transform: uppercase;">Tersedia</span>
+                                        <button onclick="addToCart({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $product->price }}, '{{ $category->icon }}')" class="btn btn-outline btn-sm add-to-cart-btn" style="border-radius: 4px; font-weight: 700; padding: 0.3rem 0.6rem; font-size: 0.75rem; text-transform: uppercase; border-width: 1px;">
+                                            + Tambah
+                                        </button>
                                     @endif
                                 </div>
                             </div>
@@ -59,6 +61,49 @@
         </div>
     </div>
 </section>
+
+{{-- FLOATING CART BUTTON --}}
+<div id="floatingCartBtn" onclick="toggleCart()" style="position: fixed; bottom: 2rem; right: 2rem; background: var(--clr-primary); color: #000; width: 60px; height: 60px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(255, 90, 0, 0.4); cursor: pointer; z-index: 99; transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);">
+    <i class='bx bxs-shopping-bag'></i>
+    <span id="cartCountBadge" style="position: absolute; top: -5px; right: -5px; background: #fff; color: #000; font-size: 0.75rem; font-weight: 800; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">0</span>
+</div>
+
+{{-- OFFCANVAS CART --}}
+<div id="cartOverlay" onclick="toggleCart()" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; opacity: 0; visibility: hidden; transition: all 0.3s ease;"></div>
+<div id="cartOffcanvas" style="position: fixed; top: 0; right: -400px; width: 400px; max-width: 100%; height: 100vh; background: var(--clr-surface); border-left: 1px solid var(--clr-border); z-index: 101; display: flex; flex-direction: column; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: -10px 0 30px rgba(0,0,0,0.8);">
+    <div style="padding: 1.5rem; border-bottom: 1px solid var(--clr-border); display: flex; justify-content: space-between; align-items: center; background: var(--clr-surface-2);">
+        <h3 class="font-heading" style="font-weight: 800; font-size: 1.2rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+            <i class='bx bxs-shopping-bag text-primary'></i> Pesanan Anda
+        </h3>
+        <button onclick="toggleCart()" class="btn btn-ghost btn-sm" style="font-size: 1.2rem; padding: 0.2rem 0.5rem; color: var(--clr-text-muted);">✕</button>
+    </div>
+
+    <div id="cartItemsContainer" style="flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+        <!-- Cart items injected via JS -->
+    </div>
+
+    <div style="padding: 1.5rem; background: var(--clr-surface-2); border-top: 1px solid var(--clr-border);">
+        <div class="form-group mb-3">
+            <label class="form-label" style="color: #fff;">📍 Pilih Lokasi Pengambilan</label>
+            <select id="cinemaSelect" class="form-select" style="font-weight: 600;">
+                <option value="">-- Pilih Bioskop --</option>
+                @foreach($cinemas as $cinema)
+                    <option value="{{ $cinema->id }}">{{ $cinema->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <span class="font-heading" style="font-weight: 700; color: var(--clr-text-muted); text-transform: uppercase; font-size: 0.9rem;">Total Bayar</span>
+            <span id="cartTotal" class="font-heading" style="font-size: 1.4rem; font-weight: 800; color: var(--clr-primary);">Rp 0</span>
+        </div>
+
+        <button onclick="checkoutCart()" id="checkoutBtn" class="btn btn-primary btn-block" style="padding: 0.9rem; font-weight: 800; font-size: 0.9rem; letter-spacing: 1px;">
+            LANJUTKAN PEMBAYARAN
+        </button>
+    </div>
+</div>
+
 @endsection
 
 @push('styles')
@@ -71,5 +116,194 @@
         border-color: var(--clr-primary);
         box-shadow: 0 8px 25px rgba(247, 148, 30, 0.15);
     }
+    .add-to-cart-btn:hover {
+        background: var(--clr-primary) !important;
+        color: #000 !important;
+    }
+    
+    #floatingCartBtn:hover {
+        transform: scale(1.05);
+    }
+    #floatingCartBtn:active {
+        transform: scale(0.95);
+    }
+
+    .cart-item {
+        display: flex; gap: 1rem; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--clr-border-dark);
+    }
+    .cart-item:last-child {
+        border-bottom: none; padding-bottom: 0;
+    }
+    .qty-btn {
+        background: var(--clr-surface-3); border: 1px solid var(--clr-border); color: #fff; width: 28px; height: 28px; border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; transition: var(--transition);
+    }
+    .qty-btn:hover { background: var(--clr-primary); color: #000; border-color: var(--clr-primary); }
 </style>
+@endpush
+
+@push('scripts')
+<script>
+    let cart = JSON.parse(localStorage.getItem('cinevora_cafe_cart')) || {};
+
+    function saveCart() {
+        localStorage.setItem('cinevora_cafe_cart', JSON.stringify(cart));
+        renderCart();
+    }
+
+    function addToCart(id, name, price, icon) {
+        if (!cart[id]) {
+            cart[id] = { id, name, price, icon, quantity: 1 };
+        } else {
+            if (cart[id].quantity < 10) cart[id].quantity++;
+        }
+        saveCart();
+        
+        // Show cart floating button animation
+        const btn = document.getElementById('floatingCartBtn');
+        btn.style.transform = 'scale(1.2)';
+        setTimeout(() => btn.style.transform = 'scale(1)', 200);
+    }
+
+    function updateQty(id, delta) {
+        if (!cart[id]) return;
+        cart[id].quantity += delta;
+        if (cart[id].quantity <= 0) {
+            delete cart[id];
+        } else if (cart[id].quantity > 10) {
+            cart[id].quantity = 10;
+        }
+        saveCart();
+    }
+
+    function toggleCart() {
+        const offcanvas = document.getElementById('cartOffcanvas');
+        const overlay = document.getElementById('cartOverlay');
+        const isOpen = offcanvas.style.right === '0px';
+        
+        if (isOpen) {
+            offcanvas.style.right = '-400px';
+            overlay.style.opacity = '0';
+            overlay.style.visibility = 'hidden';
+        } else {
+            offcanvas.style.right = '0px';
+            overlay.style.visibility = 'visible';
+            overlay.style.opacity = '1';
+        }
+    }
+
+    function formatRupiah(number) {
+        return 'Rp ' + number.toLocaleString('id-ID');
+    }
+
+    function renderCart() {
+        const container = document.getElementById('cartItemsContainer');
+        const totalEl = document.getElementById('cartTotal');
+        const countBadge = document.getElementById('cartCountBadge');
+        const floatingBtn = document.getElementById('floatingCartBtn');
+        
+        let total = 0;
+        let count = 0;
+        let html = '';
+
+        for (const id in cart) {
+            const item = cart[id];
+            const subtotal = item.price * item.quantity;
+            total += subtotal;
+            count += item.quantity;
+
+            html += `
+                <div class="cart-item">
+                    <div style="font-size: 2rem; background: var(--clr-surface-2); border-radius: 8px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--clr-border);">
+                        ${item.icon}
+                    </div>
+                    <div style="flex: 1;">
+                        <h4 style="font-family: var(--font-heading); font-size: 0.95rem; margin-bottom: 0.2rem; color: #fff;">${item.name}</h4>
+                        <div style="color: var(--clr-primary); font-weight: 700; font-size: 0.85rem;">${formatRupiah(item.price)}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <button onclick="updateQty(${id}, -1)" class="qty-btn">-</button>
+                        <span style="font-weight: 800; width: 20px; text-align: center; font-size: 0.9rem;">${item.quantity}</span>
+                        <button onclick="updateQty(${id}, 1)" class="qty-btn">+</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        if (count === 0) {
+            html = `
+                <div style="text-align: center; padding: 3rem 0; color: var(--clr-text-muted);">
+                    <i class='bx bx-shopping-bag' style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p style="font-weight: 600;">Keranjang masih kosong.</p>
+                </div>
+            `;
+            floatingBtn.style.display = 'none';
+        } else {
+            floatingBtn.style.display = 'flex';
+        }
+
+        container.innerHTML = html;
+        totalEl.innerHTML = formatRupiah(total);
+        countBadge.innerHTML = count;
+        
+        document.getElementById('checkoutBtn').disabled = count === 0;
+    }
+
+    async function checkoutCart() {
+        const cinemaId = document.getElementById('cinemaSelect').value;
+        const btn = document.getElementById('checkoutBtn');
+        
+        if (Object.keys(cart).length === 0) return;
+        
+        if (!cinemaId) {
+            alert('Silakan pilih lokasi pengambilan (Bioskop) terlebih dahulu.');
+            return;
+        }
+
+        @guest
+            alert('Anda harus login terlebih dahulu untuk memesan.');
+            window.location.href = "{{ route('login') }}";
+            return;
+        @endguest
+
+        const items = Object.values(cart).map(i => ({
+            product_id: i.id,
+            quantity: i.quantity
+        }));
+
+        btn.innerHTML = 'Memproses... <i class="bx bx-loader-alt bx-spin"></i>';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch("{{ route('cafe.checkout') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ cinema_id: cinemaId, items: items })
+            });
+
+            const data = await res.json();
+            
+            if (res.ok && data.success) {
+                // Clear cart
+                cart = {};
+                localStorage.removeItem('cinevora_cafe_cart');
+                window.location.href = data.redirect_url;
+            } else {
+                alert('Gagal: ' + (data.message || 'Terjadi kesalahan saat memproses pesanan.'));
+                btn.innerHTML = 'LANJUTKAN PEMBAYARAN';
+                btn.disabled = false;
+            }
+        } catch (error) {
+            alert('Gagal terhubung ke server.');
+            btn.innerHTML = 'LANJUTKAN PEMBAYARAN';
+            btn.disabled = false;
+        }
+    }
+
+    // Initialize
+    renderCart();
+</script>
 @endpush

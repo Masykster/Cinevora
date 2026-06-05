@@ -134,10 +134,12 @@
                 </div>
                 <div style="padding: 1.5rem;">
                     <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+                        @if($transaction->tickets->count() > 0)
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span class="text-muted text-sm" style="font-weight: 500;">Tiket Bioskop ({{ $transaction->tickets->count() }}x)</span>
                             <span style="color: #fff; font-weight: 700;">Rp {{ number_format($transaction->ticket_total, 0, ',', '.') }}</span>
                         </div>
+                        @endif
                         @if($transaction->orderItems->count() > 0)
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span class="text-muted text-sm" style="font-weight: 500;">Camilan ({{ $transaction->orderItems->sum('quantity') }} item)</span>
@@ -189,37 +191,57 @@
 
 {{-- F&B MODAL --}}
 <div id="fnbModal" style="display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem;">
-    <div class="card" style="width: 100%; max-width: 600px; max-height: 80vh; overflow-y: auto; background: var(--clr-surface); border: 1px solid var(--clr-border); box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--clr-border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--clr-surface); z-index: 10;">
-            <h3 class="font-heading" style="font-weight: 800; font-size: 1.1rem; color: #fff; text-transform: uppercase;">Tambah Snack & Minuman</h3>
-            <button onclick="document.getElementById('fnbModal').style.display='none'" class="btn btn-ghost btn-sm" style="color: var(--clr-text-muted); font-size: 1.1rem; padding: 0.25rem 0.5rem;">✕</button>
+    <div class="card" style="width: 100%; max-width: 800px; max-height: 90vh; overflow: hidden; background: var(--clr-surface); border: 1px solid var(--clr-border); box-shadow: 0 10px 40px rgba(0,0,0,0.8); display: flex; flex-direction: column; border-radius: 12px;">
+        <div style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--clr-border); display: flex; justify-content: space-between; align-items: center; background: var(--clr-surface-2); z-index: 10;">
+            <h3 class="font-heading" style="font-weight: 800; font-size: 1.3rem; color: #fff; text-transform: uppercase; letter-spacing: 0.5px;">🍿 Tambah Snack & Minuman</h3>
+            <button onclick="document.getElementById('fnbModal').style.display='none'" class="btn btn-ghost btn-sm" style="color: var(--clr-text-muted); font-size: 1.5rem; padding: 0.25rem 0.5rem; line-height: 1;">✕</button>
         </div>
 
-        <form method="POST" action="{{ route('checkout.addFnb', $transaction) }}" id="fnbForm">
+        <form method="POST" action="{{ route('checkout.addFnb', $transaction) }}" id="fnbForm" style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
             @csrf
-            <div style="padding: 0.5rem 1.25rem;">
-                @foreach($products as $product)
-                    <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--clr-border);">
-                        <div style="flex: 1;">
-                            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                                <span style="font-weight: 700; font-size: 0.95rem; color: #fff;">{{ $product->name }}</span>
-                                <span class="badge" style="background: var(--clr-surface-3); border: 1px solid var(--clr-border-dark); font-size: 0.6rem; font-weight: 700; text-transform: uppercase;">{{ $product->category->name }}</span>
+            <div style="padding: 1.5rem 2rem; overflow-y: auto; flex: 1; background: var(--clr-bg);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
+                    @foreach($products as $product)
+                        <div class="card cafe-card" style="display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--clr-border); background: var(--clr-surface); box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.2s, border-color 0.2s;">
+                            <div style="height: 120px; background: var(--clr-surface-2); display: flex; align-items: center; justify-content: center; font-size: 3rem; border-bottom: 1px solid var(--clr-border); position: relative;">
+                                <div style="position: absolute; width: 60px; height: 60px; border-radius: 50%; background: var(--clr-primary-dim); filter: blur(15px); z-index: 1;"></div>
+                                <span style="position: relative; z-index: 2;">{{ $product->category->icon ?? '🍿' }}</span>
                             </div>
-                            <p class="text-muted text-xs" style="line-height: 1.4; margin-top: 0.25rem; margin-bottom: 0.4rem;">{{ $product->description }}</p>
-                            <p style="color: var(--clr-primary); font-weight: 800; font-size: 0.9rem;">{{ $product->formatted_price }}</p>
+                            <div style="padding: 1.25rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <h3 style="font-family: var(--font-heading); font-weight: 800; font-size: 1rem; color: #fff; margin-bottom: 0.35rem;">{{ $product->name }}</h3>
+                                    <p class="text-muted text-xs" style="line-height: 1.4; margin-bottom: 1rem;">{{ $product->description }}</p>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--clr-border); padding-top: 0.75rem;">
+                                    <span style="font-family: var(--font-heading); font-weight: 800; color: var(--clr-primary); font-size: 1.05rem;">
+                                        {{ $product->formatted_price }}
+                                    </span>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <button type="button" class="qty-btn" onclick="updateModalQty({{ $loop->index }}, -1)" style="width: 24px; height: 24px; border-radius: 4px; background: var(--clr-surface-3); border: 1px solid var(--clr-border); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 800; transition: 0.2s;">-</button>
+                                        <span id="qty-display-{{ $loop->index }}" style="font-weight: 800; width: 20px; text-align: center; color: #fff; font-size: 0.9rem;">0</span>
+                                        <button type="button" class="qty-btn" onclick="updateModalQty({{ $loop->index }}, 1)" style="width: 24px; height: 24px; border-radius: 4px; background: var(--clr-surface-3); border: 1px solid var(--clr-border); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 800; transition: 0.2s;">+</button>
+                                        
+                                        <input type="hidden" name="items[{{ $loop->index }}][quantity]" id="qty-input-{{ $loop->index }}" value="0" data-price="{{ $product->price }}" disabled>
+                                        <input type="hidden" name="items[{{ $loop->index }}][product_id]" value="{{ $product->id }}" disabled>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div style="width: 80px; flex-shrink: 0;">
-                            <select name="items[{{ $loop->index }}][quantity]" class="form-select" style="padding: 0.45rem 0.75rem; font-size: 0.8rem; background: var(--clr-surface-2); border-color: var(--clr-border-dark); border-radius: 4px; font-weight: 700;" onchange="this.closest('div').parentElement.querySelector('input[type=hidden]').disabled = (this.value == 0)">
-                                <option value="0">0</option>
-                                @for($i = 1; $i <= 5; $i++)<option value="{{ $i }}">{{ $i }}</option>@endfor
-                            </select>
-                            <input type="hidden" name="items[{{ $loop->index }}][product_id]" value="{{ $product->id }}" disabled>
-                        </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
-            <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--clr-border); position: sticky; bottom: 0; background: var(--clr-surface); z-index: 10;">
-                <button type="submit" class="btn btn-primary btn-block" style="border-radius: 4px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;" onclick="enableSelectedItems()">Tambahkan Pesanan</button>
+            <div style="padding: 1.5rem 2rem; border-top: 1px solid var(--clr-border); background: var(--clr-surface-2); z-index: 10;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div>
+                        <span class="text-muted text-xs" style="display: block; font-weight: 600; text-transform: uppercase;">Total Transaksi Saat Ini</span>
+                        <span style="color: #fff; font-weight: 700; font-size: 0.9rem;" id="modalCurrentTotal" data-value="{{ $transaction->grand_total }}">Rp {{ number_format($transaction->grand_total, 0, ',', '.') }}</span>
+                    </div>
+                    <div>
+                        <span class="text-muted text-xs" style="display: block; font-weight: 600; text-transform: uppercase; text-align: right;">Tambahan F&B</span>
+                        <span style="color: var(--clr-primary); font-weight: 800; font-size: 1.1rem; text-align: right;" id="modalFnbTotal">Rp 0</span>
+                    </div>
+                </div>
+                <button type="submit" id="fnbSubmitBtn" class="btn btn-primary btn-block" style="border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; font-size: 0.95rem; padding: 1rem;" disabled onclick="enableSelectedItems()">Tambahkan ke Pesanan</button>
             </div>
         </form>
     </div>
@@ -228,11 +250,52 @@
 
 @push('scripts')
 <script>
+function updateModalQty(index, delta) {
+    const input = document.getElementById('qty-input-' + index);
+    const display = document.getElementById('qty-display-' + index);
+    
+    let current = parseInt(input.value) || 0;
+    current += delta;
+    
+    if (current < 0) current = 0;
+    if (current > 10) current = 10;
+    
+    input.value = current;
+    display.textContent = current;
+    
+    calculateModalTotal();
+}
+
+function calculateModalTotal() {
+    let fnbTotal = 0;
+    document.querySelectorAll('#fnbForm input[name$="[quantity]"]').forEach(input => {
+        let qty = parseInt(input.value) || 0;
+        let price = parseInt(input.getAttribute('data-price')) || 0;
+        fnbTotal += qty * price;
+    });
+
+    const modalFnbTotal = document.getElementById('modalFnbTotal');
+    const submitBtn = document.getElementById('fnbSubmitBtn');
+    const currentTotal = parseInt(document.getElementById('modalCurrentTotal').getAttribute('data-value')) || 0;
+
+    modalFnbTotal.textContent = 'Rp ' + fnbTotal.toLocaleString('id-ID');
+
+    if (fnbTotal > 0) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = `Tambahkan ke Pesanan (Total: Rp ${(currentTotal + fnbTotal).toLocaleString('id-ID')})`;
+    } else {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Tambahkan ke Pesanan';
+    }
+}
+
 function enableSelectedItems() {
-    document.querySelectorAll('#fnbForm select').forEach(select => {
-        const hidden = select.closest('div').parentElement.querySelector('input[type=hidden]');
-        if (parseInt(select.value) > 0) {
-            hidden.disabled = false;
+    // Enable hidden inputs before submit so they get included in POST
+    document.querySelectorAll('#fnbForm input[name$="[quantity]"]').forEach(input => {
+        if (parseInt(input.value) > 0) {
+            input.disabled = false;
+            // Also enable the product_id input next to it
+            input.parentElement.querySelector('input[name$="[product_id]"]').disabled = false;
         }
     });
 }

@@ -12,40 +12,54 @@
 
         {{-- E-TICKET CARD (this whole div will be captured as image) --}}
         @php $firstTicket = $transaction->tickets->first(); @endphp
-        <div id="eTicketCard" style="overflow: hidden; border-radius: 12px;">
-            {{-- TICKET HEADER - Movie Title --}}
-            <div style="background: linear-gradient(135deg, #0a1628 0%, #1a2744 100%); padding: 1.5rem 1.5rem 1rem 1.5rem; text-align: center;">
-                <span style="font-family: var(--font-heading); font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 0.3rem;">cinevora</span>
-                <h2 class="font-heading" style="font-size: 1.5rem; font-weight: 800; color: var(--clr-primary); text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2;">
-                    {{ $firstTicket->schedule->movie->title }}
-                </h2>
-            </div>
+        <div id="eTicketCard" style="overflow: hidden; border-radius: 12px; background: var(--clr-surface);">
+            @if($firstTicket)
+                {{-- TICKET HEADER - Movie Title --}}
+                <div style="background: linear-gradient(135deg, #0a1628 0%, #1a2744 100%); padding: 1.5rem 1.5rem 1rem 1.5rem; text-align: center;">
+                    <span style="font-family: var(--font-heading); font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 0.3rem;">cinevora</span>
+                    <h2 class="font-heading" style="font-size: 1.5rem; font-weight: 800; color: var(--clr-primary); text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2;">
+                        {{ $firstTicket->schedule->movie->title }}
+                    </h2>
+                </div>
 
-            {{-- TICKET BODY --}}
-            <div style="background: linear-gradient(180deg, #1a2744 0%, #152036 100%); padding: 1.25rem 1.5rem;">
-                {{-- Movie Info Row: Poster + Details --}}
-                <div style="display: flex; gap: 1rem; align-items: flex-start;">
-                    {{-- Poster --}}
-                    <div style="width: 80px; flex-shrink: 0; border-radius: 6px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
-                        <img src="{{ route('img.proxy', ['url' => $firstTicket->schedule->movie->poster_url]) }}" alt="{{ $firstTicket->schedule->movie->title }}" style="width: 100%; display: block;" crossorigin="anonymous">
-                    </div>
+                {{-- TICKET BODY --}}
+                <div style="background: linear-gradient(180deg, #1a2744 0%, #152036 100%); padding: 1.25rem 1.5rem;">
+                    {{-- Movie Info Row: Poster + Details --}}
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        {{-- Poster --}}
+                        <div style="width: 80px; flex-shrink: 0; border-radius: 6px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+                            <img src="{{ route('img.proxy', ['url' => $firstTicket->schedule->movie->poster_url]) }}" alt="{{ $firstTicket->schedule->movie->title }}" style="width: 100%; display: block;" crossorigin="anonymous">
+                        </div>
 
-                    {{-- Details --}}
-                    <div style="flex: 1; display: grid; grid-template-columns: auto 1fr; gap: 0.4rem 0.75rem; font-size: 0.8rem;">
-                        <span style="color: rgba(255,255,255,0.5); font-weight: 600;">Tanggal</span>
-                        <span style="color: #fff; font-weight: 700;">{{ $firstTicket->schedule->show_date->translatedFormat('l, d M Y') }}</span>
+                        {{-- Details --}}
+                        <div style="flex: 1; display: grid; grid-template-columns: auto 1fr; gap: 0.4rem 0.75rem; font-size: 0.8rem;">
+                            <span style="color: rgba(255,255,255,0.5); font-weight: 600;">Tanggal</span>
+                            <span style="color: #fff; font-weight: 700;">{{ $firstTicket->schedule->show_date->translatedFormat('l, d M Y') }}</span>
 
-                        <span style="color: rgba(255,255,255,0.5); font-weight: 600;">Bioskop</span>
-                        <span style="color: #fff; font-weight: 700;">{{ $firstTicket->schedule->studio->cinema->name }} {{ $firstTicket->schedule->studio->name }}</span>
+                            <span style="color: rgba(255,255,255,0.5); font-weight: 600;">Bioskop</span>
+                            <span style="color: #fff; font-weight: 700;">{{ $firstTicket->schedule->studio->cinema->name }} {{ $firstTicket->schedule->studio->name }}</span>
 
-                        <span style="color: rgba(255,255,255,0.5); font-weight: 600;">Jam</span>
-                        <span style="color: #fff; font-weight: 700;">{{ $firstTicket->schedule->show_time_formatted }}</span>
+                            <span style="color: rgba(255,255,255,0.5); font-weight: 600;">Jam</span>
+                            <span style="color: #fff; font-weight: 700;">{{ $firstTicket->schedule->show_time_formatted }}</span>
 
-                        <span style="color: rgba(255,255,255,0.5); font-weight: 600;">Tiket</span>
-                        <span style="color: var(--clr-primary); font-weight: 800;">{{ $transaction->tickets->pluck('seat.code')->implode(', ') }}</span>
+                            <span style="color: rgba(255,255,255,0.5); font-weight: 600;">Tiket</span>
+                            <span style="color: var(--clr-primary); font-weight: 800;">{{ $transaction->tickets->pluck('seat.code')->implode(', ') }}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @else
+                {{-- CAFE ONLY HEADER --}}
+                <div style="background: linear-gradient(135deg, #1c1308 0%, #2e1e0a 100%); padding: 1.5rem 1.5rem 1rem 1.5rem; text-align: center;">
+                    <span style="font-family: var(--font-heading); font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 0.3rem;">cinevora</span>
+                    <h2 class="font-heading" style="font-size: 1.5rem; font-weight: 800; color: var(--clr-primary); text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2;">
+                        PESANAN CAFE
+                    </h2>
+                </div>
+                <div style="background: linear-gradient(180deg, #2e1e0a 0%, #150f05 100%); padding: 1.25rem 1.5rem; text-align: center;">
+                    <span style="color: rgba(255,255,255,0.5); font-weight: 600; display: block; margin-bottom: 0.25rem; font-size: 0.8rem;">Lokasi Pengambilan</span>
+                    <span style="color: #fff; font-weight: 700; font-size: 1.1rem;">{{ $transaction->cafeOrder->cinema->name ?? 'Bioskop Cinevora' }}</span>
+                </div>
+            @endif
 
             {{-- QR CODE SECTION --}}
             <div style="background: #ffffff; padding: 1.5rem; text-align: center;">
@@ -62,14 +76,12 @@
             <div style="background: #f0f2f5; padding: 1.25rem 1.5rem; border-top: 2px dashed #d0d5dd;">
                 <div style="display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.75rem;">
                     <span style="font-size: 1.1rem;">❓</span>
-                    <span style="font-weight: 800; color: #1a1a1a; font-size: 0.9rem;">Cara mencetak tiket Anda</span>
+                    <span style="font-weight: 800; color: #1a1a1a; font-size: 0.9rem;">Cara {{ $firstTicket ? 'mencetak tiket' : 'mengambil pesanan' }} Anda</span>
                 </div>
                 <ol style="margin: 0; padding-left: 1.25rem; font-size: 0.75rem; color: #444; line-height: 1.8; font-weight: 500;">
-                    <li>Kunjungi kios CINEVORA yang ada di lokasi bioskop pilihan Anda</li>
-                    <li>Jika menggunakan manual input, masukkan nomor telepon dan kode booking ke layar</li>
-                    <li>Jika menggunakan kode QR, pindai gambar kode QR ke alat pemindai</li>
-                    <li>Periksa kembali detail pemesanan Anda pada layar lalu tekan Print</li>
-                    <li>Tiket akan tercetak otomatis</li>
+                    <li>Kunjungi {{ $firstTicket ? 'kios' : 'area cafe' }} CINEVORA yang ada di lokasi bioskop pilihan Anda</li>
+                    <li>Tunjukkan kode QR atau masukkan kode booking</li>
+                    <li>{{ $firstTicket ? 'Tiket akan tercetak otomatis dan pesanan makanan dapat diambil di area cafe' : 'Pesanan makanan/minuman Anda akan segera disiapkan' }}</li>
                 </ol>
             </div>
         </div>

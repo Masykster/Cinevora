@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\CinemaController as AdminCinemaController;
 use App\Http\Controllers\Admin\ScheduleController as AdminScheduleController;
 use App\Http\Controllers\Admin\VoucherController as AdminVoucherController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\CafeCartController;
 use App\Http\Controllers\Cafe\OrderController as CafeOrderController;
 
 // ========================================
@@ -24,6 +25,7 @@ Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
 Route::get('/movies/{movie}', [MovieController::class, 'show'])->name('movies.show');
 Route::get('/cinemas', [\App\Http\Controllers\PublicCinemaController::class, 'index'])->name('cinemas.index');
 Route::get('/cafe-menu', [CafeMenuController::class, 'index'])->name('cafe.menu');
+Route::post('/cafe-menu/checkout', [CafeCartController::class, 'checkout'])->name('cafe.checkout')->middleware('auth');
 
 // Xendit Webhook (no auth, no CSRF)
 Route::post('/xendit/webhook', [\App\Http\Controllers\XenditWebhookController::class, 'handle'])->name('xendit.webhook');
