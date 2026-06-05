@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class TmdbService
 {
@@ -24,20 +25,24 @@ class TmdbService
             return [];
         }
 
-        try {
-            $response = Http::get("{$this->baseUrl}/search/movie", [
-                'api_key' => $this->apiKey,
-                'query' => $query,
-            ]);
+        $cacheKey = 'tmdb_search_' . md5(strtolower(trim($query)));
 
-            if ($response->successful()) {
-                return $response->json()['results'] ?? [];
+        return Cache::remember($cacheKey, now()->addHours(2), function () use ($query) {
+            try {
+                $response = Http::get("{$this->baseUrl}/search/movie", [
+                    'api_key' => $this->apiKey,
+                    'query' => $query,
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json()['results'] ?? [];
+                }
+            } catch (\Exception $e) {
+                Log::error('TMDB Search Error: ' . $e->getMessage());
             }
-        } catch (\Exception $e) {
-            Log::error('TMDB Search Error: ' . $e->getMessage());
-        }
 
-        return [];
+            return [];
+        });
     }
 
     /**
@@ -49,19 +54,23 @@ class TmdbService
             return [];
         }
 
-        try {
-            $response = Http::get("{$this->baseUrl}/movie/{$id}", [
-                'api_key' => $this->apiKey,
-                'append_to_response' => 'credits',
-            ]);
+        $cacheKey = 'tmdb_movie_' . $id;
 
-            if ($response->successful()) {
-                return $response->json();
+        return Cache::remember($cacheKey, now()->addHours(2), function () use ($id) {
+            try {
+                $response = Http::get("{$this->baseUrl}/movie/{$id}", [
+                    'api_key' => $this->apiKey,
+                    'append_to_response' => 'credits',
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+            } catch (\Exception $e) {
+                Log::error('TMDB Details Error: ' . $e->getMessage());
             }
-        } catch (\Exception $e) {
-            Log::error('TMDB Details Error: ' . $e->getMessage());
-        }
 
-        return [];
+            return [];
+        });
     }
 }
