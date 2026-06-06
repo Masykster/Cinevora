@@ -24,6 +24,11 @@ class MovieResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->isCinemaAdmin() ?? false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return MovieForm::configure($schema);

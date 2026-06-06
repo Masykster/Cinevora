@@ -115,7 +115,7 @@
         background: linear-gradient(90deg, transparent, var(--clr-primary), transparent); 
         border-radius: 50%; 
         margin-bottom: 0.75rem;
-        box-shadow: 0 4px 15px rgba(247, 148, 30, 0.4);
+        box-shadow: 0 4px 15px rgba(188, 163, 116, 0.35);
     }
 
     .row-label {
@@ -153,7 +153,7 @@
         border-color: var(--clr-primary-light) !important;
         color: #000000 !important; 
         transform: scale(1.1);
-        box-shadow: 0 0 12px rgba(247, 148, 30, 0.5);
+        box-shadow: 0 0 12px rgba(188, 163, 116, 0.4);
     }
     .seat-booked {
         background: #141416; 

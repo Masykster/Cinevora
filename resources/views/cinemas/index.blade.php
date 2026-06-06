@@ -62,7 +62,7 @@
     .cinema-card:hover {
         transform: translateY(-4px);
         border-color: var(--clr-primary) !important;
-        box-shadow: 0 12px 30px rgba(255, 90, 0, 0.15) !important;
+        box-shadow: 0 12px 30px rgba(188, 163, 116, 0.15) !important;
     }
 </style>
 @endpush

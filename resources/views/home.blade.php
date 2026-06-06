@@ -80,42 +80,55 @@
     </div>
 @endif
 
-{{-- QUICK BOOKING WIDGET --}}
-<div class="container" style="margin-top: -3rem; position: relative; z-index: 10; margin-bottom: 3.5rem;">
-    <div class="booking-widget-card" style="padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 20px 40px rgba(0,0,0,0.95);">
-        <form action="" method="GET" id="quickBookForm" onsubmit="event.preventDefault(); navigateToMovie();" style="display: flex; gap: 1.25rem; align-items: flex-end; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 240px;">
-                <label class="form-label" style="color: var(--clr-primary); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">1. Pilih Bioskop</label>
-                <select id="quickCinema" class="form-select widget-select" style="height: 46px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">
-                    <option value="">Semua Bioskop</option>
-                    @foreach($cinemas as $cinema)
-                        <option value="{{ $cinema->id }}">{{ $cinema->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div style="flex: 1; min-width: 240px;">
-                <label class="form-label" style="color: var(--clr-primary); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">2. Pilih Film</label>
-                <select id="quickMovie" class="form-select widget-select" style="height: 46px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;" required>
-                    <option value="" disabled selected>Pilih Film...</option>
-                    @foreach($nowPlaying as $movie)
-                        <option value="{{ $movie->id }}" data-url="{{ route('movies.show', $movie) }}">{{ $movie->title }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <button type="submit" class="btn btn-primary" style="height: 46px; padding: 0 2.5rem; font-weight: 700; font-size: 0.95rem;">
-                    Cari Tiket <i class='bx bx-right-arrow-alt' style="font-size: 1.3rem; margin-left: 0.25rem;"></i>
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+
 
 <div class="container section" style="padding-top: 1rem;">
+    {{-- PROMO NEWS CAROUSEL --}}
+    <div class="promo-news-carousel-section" style="margin-bottom: 4rem; position: relative; overflow: visible;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; border-bottom: 1px solid var(--clr-border); padding-bottom: 0.75rem;">
+            <div>
+                <h2 class="font-heading section-title" style="font-size: 1.5rem; color: var(--clr-primary);">PROMO &amp; INFO TERBARU</h2>
+                <p class="text-muted text-xs" style="text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-top: 0.25rem;">Penawaran eksklusif dan kabar terbaru bioskop</p>
+            </div>
+        </div>
+        
+        @if($promos->count() > 0)
+            <div class="promo-carousel-wrapper">
+                <div class="promo-carousel-track">
+                    @foreach($promos as $promo)
+                        <div class="promo-carousel-slide">
+                            @if($promo->link_url)
+                                <a href="{{ $promo->link_url }}" target="_blank" class="promo-slide-inner">
+                                    <img src="{{ $promo->image_url }}" alt="{{ $promo->title }}" class="skeleton-img promo-banner-img">
+                                </a>
+                            @else
+                                <div class="promo-slide-inner">
+                                    <img src="{{ $promo->image_url }}" alt="{{ $promo->title }}" class="skeleton-img promo-banner-img">
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            
+            <!-- Navigation Arrows (outside cards, inside section) -->
+            <button class="promo-carousel-arrow prev" onclick="movePromoSlide(-1)" aria-label="Previous Slide">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+            <button class="promo-carousel-arrow next" onclick="movePromoSlide(1)" aria-label="Next Slide">
+                <i class='bx bx-chevron-right'></i>
+            </button>
+        @else
+            <div style="width: 100%; padding: 4rem 2rem; text-align: center; border: 1px dashed var(--clr-border); border-radius: var(--radius); background: var(--clr-surface-2);">
+                <p class="text-muted text-sm" style="font-weight: 500;">Belum ada promo terbaru.</p>
+            </div>
+        @endif
+    </div>
+
     {{-- NOW PLAYING SECTION --}}
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; border-bottom: 2px solid var(--clr-border); padding-bottom: 0.75rem;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; border-bottom: 1px solid var(--clr-border); padding-bottom: 0.75rem;">
         <div>
-            <h2 class="font-heading section-title">Lagi Tayang</h2>
+            <h2 class="font-heading section-title">SEDANG TAYANG</h2>
             <p class="text-muted text-xs" style="text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-top: 0.25rem;">Film menarik yang sedang diputar hari ini</p>
         </div>
         <a href="{{ route('movies.index') }}" class="btn btn-outline btn-sm" style="font-weight: 700; font-size: 0.75rem; padding: 0.4rem 1.15rem;">
@@ -129,14 +142,14 @@
             <div class="movie-card">
                 <a href="{{ route('movies.show', $movie) }}" class="card-link">
                     <div class="movie-poster-wrapper">
-                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img">
+                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img">
                         
-                        {{-- Immersive Hover overlay with Solar Orange button --}}
+                        {{-- Immersive Hover overlay with Gold button --}}
                         <div class="movie-card-overlay">
-                            <span class="btn btn-primary btn-sm" style="font-weight: 700; font-size: 0.75rem; padding: 0.5rem 1.25rem;">Beli Tiket</span>
+                            <span class="btn btn-primary btn-sm" style="font-weight: 700; font-size: 0.75rem; padding: 0.5rem 1.25rem; color: #000;">Beli Tiket</span>
                         </div>
                         
-                        {{-- Top Left Badges styled after myvue.com --}}
+                        {{-- Top Left Badges --}}
                         <div style="position: absolute; top: 0.75rem; left: 0.75rem; display: flex; flex-direction: column; gap: 0.35rem; z-index: 5;">
                             <span class="badge-age-dark">{{ $movie->age_rating }}</span>
                             <span class="badge-format">2D</span>
@@ -145,7 +158,7 @@
                 </a>
                 
                 {{-- Movie Info --}}
-                <div style="padding: 0.75rem 0 0 0;">
+                <div style="padding: 0.75rem 0.25rem 0 0.25rem;">
                     <h3 class="font-heading movie-title-heading">
                         <a href="{{ route('movies.show', $movie) }}" style="color: inherit; text-decoration: none;">
                             {{ $movie->title }}
@@ -168,9 +181,9 @@
     {{-- COMING SOON SECTION --}}
     @if($comingSoon->count() > 0)
     <div style="margin-top: 5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; border-bottom: 2px solid var(--clr-border); padding-bottom: 0.75rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; border-bottom: 1px solid var(--clr-border); padding-bottom: 0.75rem;">
             <div>
-                <h2 class="font-heading section-title">Akan Datang</h2>
+                <h2 class="font-heading section-title">AKAN DATANG</h2>
                 <p class="text-muted text-xs" style="text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-top: 0.25rem;">Segera hadir di bioskop Cinevora</p>
             </div>
             <a href="{{ route('movies.index', ['status' => 'coming_soon']) }}" class="btn btn-outline btn-sm" style="font-weight: 700; font-size: 0.75rem; padding: 0.4rem 1.15rem;">
@@ -183,7 +196,7 @@
                 <div class="movie-card">
                     <a href="{{ route('movies.show', $movie) }}" class="card-link">
                         <div class="movie-poster-wrapper">
-                            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img">
+                            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img">
                             
                             {{-- Top Badges --}}
                             <div style="position: absolute; top: 0.75rem; left: 0.75rem; display: flex; gap: 0.25rem; z-index: 5;">
@@ -191,7 +204,7 @@
                             </div>
                         </div>
                     </a>
-                    <div style="padding: 0.75rem 0 0 0;">
+                    <div style="padding: 0.75rem 0.25rem 0 0.25rem;">
                         <h3 class="font-heading movie-title-heading">
                             <a href="{{ route('movies.show', $movie) }}" style="color: inherit; text-decoration: none;">
                                 {{ $movie->title }}
@@ -207,6 +220,98 @@
         </div>
     </div>
     @endif
+
+    {{-- MFOOD BANNER SECTION --}}
+    <div class="mfood-promo-banner" style="margin-top: 5rem; background: linear-gradient(135deg, #1b1610 0%, #080604 100%); border: 1px solid var(--clr-border); border-radius: var(--radius-lg); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.6); position: relative; overflow: hidden;">
+        <div style="position: absolute; right: -50px; bottom: -50px; width: 250px; height: 250px; border-radius: 50%; background: rgba(188, 163, 116, 0.04); filter: blur(50px);"></div>
+        <div style="flex: 1; min-width: 280px; z-index: 2;">
+            <span class="badge" style="background: rgba(188,163,116,0.15); color: var(--clr-primary); border: 1px solid var(--clr-primary); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 0.3rem 0.75rem; border-radius: 4px; margin-bottom: 1rem;">Cinevora Cafe</span>
+            <h2 class="font-heading" style="font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1.2; text-transform: uppercase; letter-spacing: -0.5px;">Makanan &amp; minuman enak siap nemenin nonton!</h2>
+            <p style="color: var(--clr-text-muted); font-size: 0.95rem; margin-top: 0.75rem; font-weight: 500; max-width: 480px;">Pesan snack favoritmu lebih mudah secara online dan ambil tanpa antre di area Cinevora Cafe.</p>
+            <div style="margin-top: 1.75rem;">
+                <a href="{{ route('cafe.menu') }}" class="btn btn-primary" style="padding: 0.8rem 2.25rem; font-weight: 800; border-radius: 6px; color:#000; box-shadow: 0 4px 15px rgba(188,163,116,0.35);">
+                    🍿 PESEN M.FOOD
+                </a>
+            </div>
+        </div>
+        <div class="mfood-visual" style="flex: 0 0 240px; display: flex; justify-content: center; align-items: center; position: relative; height: 180px; z-index: 2;">
+            <span style="font-size: 8rem; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); transform: rotate(-5deg); display: inline-block; animation: floatPopcorn 4s ease-in-out infinite;">🍿</span>
+            <span style="font-size: 5rem; filter: drop-shadow(0 8px 15px rgba(0,0,0,0.4)); position: absolute; bottom: 0; right: 20px; transform: rotate(10deg); display: inline-block; animation: floatSoda 4s ease-in-out infinite alternate;">🥤</span>
+        </div>
+    </div>
+
+    {{-- EXPERIENCE SECTION --}}
+    <div style="margin-top: 5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; border-bottom: 1px solid var(--clr-border); padding-bottom: 0.75rem;">
+            <div>
+                <h2 class="font-heading section-title">CINEVORA EXPERIENCE</h2>
+                <p class="text-muted text-xs" style="text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-top: 0.25rem;">Rasakan sensasi menonton terbaik di studio kami</p>
+            </div>
+        </div>
+        
+        <div class="experience-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+            <!-- Deluxe -->
+            <div class="experience-card" style="background: linear-gradient(180deg, #111 0%, #070707 100%); border: 1px solid var(--clr-border); border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: var(--transition); box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+               <div style="padding: 2rem 2rem 1.25rem 2rem;">
+                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                       <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid #10B981; font-weight: 800; font-size: 0.7rem; padding: 0.25rem 0.60rem; border-radius: 4px;">Deluxe</span>
+                       <span style="font-size: 1.5rem;">🎬</span>
+                   </div>
+                   <h3 class="font-heading" style="font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">STUDIO DELUXE</h3>
+                   <p style="color: var(--clr-text-muted); font-size: 0.85rem; line-height: 1.5; font-weight: 500;">Nikmati tontonan berkualitas tinggi dengan kursi yang nyaman, sound system Dolby Atmos, dan harga tiket yang sangat terjangkau.</p>
+               </div>
+               <div style="padding: 1.5rem 2rem; border-top: 1px solid rgba(255,255,255,0.02); background: rgba(255,255,255,0.01);">
+                   <a href="#" class="btn btn-outline btn-sm btn-block" style="border-radius: 6px; font-weight: 700; text-transform: uppercase;" onclick="event.preventDefault(); alert('Studio Deluxe tersedia di semua cabang Cinevora.')">Baca Selengkapnya</a>
+               </div>
+            </div>
+            
+            <!-- Premiere -->
+            <div class="experience-card" style="background: linear-gradient(180deg, #18130a 0%, #0d0a05 100%); border: 1px solid var(--clr-primary); border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: var(--transition); box-shadow: 0 4px 20px rgba(188,163,116,0.15);">
+               <div style="padding: 2rem 2rem 1.25rem 2rem;">
+                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                       <span class="badge" style="background: rgba(188, 163, 116, 0.2); color: var(--clr-primary); border: 1px solid var(--clr-primary); font-weight: 800; font-size: 0.7rem; padding: 0.25rem 0.60rem; border-radius: 4px;">Premiere</span>
+                       <span style="font-size: 1.5rem;">🛋️</span>
+                   </div>
+                   <h3 class="font-heading" style="font-size: 1.3rem; font-weight: 800; color: var(--clr-primary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">THE PREMIERE</h3>
+                   <p style="color: var(--clr-text-muted); font-size: 0.85rem; line-height: 1.5; font-weight: 500;">Rasakan kemewahan menonton dengan kursi kulit reclinable kelas satu, selimut lembut, serta pemesanan makanan premium langsung dari tempat duduk Anda.</p>
+               </div>
+               <div style="padding: 1.5rem 2rem; border-top: 1px solid rgba(188,163,116,0.1); background: rgba(188,163,116,0.02);">
+                   <a href="#" class="btn btn-primary btn-sm btn-block" style="border-radius: 6px; font-weight: 700; text-transform: uppercase; color:#000;" onclick="event.preventDefault(); alert('The Premiere tersedia di bioskop-bioskop utama Cinevora.')">Pesan Premiere</a>
+               </div>
+            </div>
+            
+            <!-- IMAX -->
+            <div class="experience-card" style="background: linear-gradient(180deg, #0d1624 0%, #050a11 100%); border: 1px solid #1e3a8a; border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: var(--transition); box-shadow: 0 4px 20px rgba(30,58,138,0.15);">
+               <div style="padding: 2rem 2rem 1.25rem 2rem;">
+                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                       <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid #3b82f6; font-weight: 800; font-size: 0.7rem; padding: 0.25rem 0.60rem; border-radius: 4px;">IMAX</span>
+                       <span style="font-size: 1.5rem;">🔊</span>
+                   </div>
+                   <h3 class="font-heading" style="font-size: 1.3rem; font-weight: 800; color: #3b82f6; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">STUDIO IMAX</h3>
+                   <p style="color: var(--clr-text-muted); font-size: 0.85rem; line-height: 1.5; font-weight: 500;">Rasakan visual raksasa berdefinisi tinggi yang luar biasa tajam dengan sistem proyeksi laser IMAX 4K dan sistem audio yang membuat kursi Anda bergetar.</p>
+               </div>
+               <div style="padding: 1.5rem 2rem; border-top: 1px solid rgba(59,130,246,0.1); background: rgba(59,130,246,0.02);">
+                   <a href="#" class="btn btn-outline btn-sm btn-block" style="border-radius: 6px; font-weight: 700; text-transform: uppercase; border-color: #3b82f6; color: #3b82f6;" onclick="event.preventDefault(); alert('Studio IMAX tersedia eksklusif di Cinevora Central Mall.')">Lihat Jadwal IMAX</a>
+               </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- APP DOWNLOAD BANNER --}}
+    <div class="app-download-banner" style="margin-top: 5rem; margin-bottom: 2rem; background: linear-gradient(90deg, #121212 0%, #1e1b15 100%); border: 1px solid var(--clr-border); border-radius: var(--radius-lg); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <div style="flex: 1; min-width: 280px;">
+            <h3 class="font-heading" style="font-size: 1.8rem; font-weight: 800; color: #fff; line-height: 1.2; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 0.5rem;">Download m.tix dan nikmati semua fitur dengan maksimal!</h3>
+            <p style="color: var(--clr-text-muted); font-size: 0.9rem; font-weight: 500;">Beli tiket nonton, pesan f&amp;b, kumpulkan poin, dan nikmati diskon khusus eksklusif di aplikasi mobile kami.</p>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            <a href="https://play.google.com/store" target="_blank" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Download" style="height: 40px; display: block;">
+            </a>
+            <a href="https://www.apple.com/app-store" target="_blank" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store Download" style="height: 40px; display: block;">
+            </a>
+        </div>
+    </div>
 </div>
 
 {{-- TRAILER MODAL --}}
@@ -326,6 +431,87 @@ document.addEventListener('DOMContentLoaded', () => {
         startCarouselTimer();
     }
 });
+
+// Promo Carousel Logic
+let promoCurrentIndex = 0;
+let promoInterval;
+
+function getPromoVisibleItems() {
+    if (window.innerWidth >= 1024) return 3;
+    if (window.innerWidth >= 640) return 2;
+    return 1;
+}
+
+function updatePromoCarousel() {
+    const track = document.querySelector('.promo-carousel-track');
+    if (!track) return;
+    
+    const visibleItems = getPromoVisibleItems();
+    const totalItems = {{ isset($promos) ? $promos->count() : 0 }};
+    const maxIndex = Math.max(0, totalItems - visibleItems);
+    
+    // Clamp index
+    if (promoCurrentIndex > maxIndex) {
+        promoCurrentIndex = 0; // Wrap to beginning
+    } else if (promoCurrentIndex < 0) {
+        promoCurrentIndex = maxIndex; // Wrap to end
+    }
+    
+    track.style.transform = `translateX(calc(-${promoCurrentIndex} * (100% + 1.5rem) / ${visibleItems}))`;
+    
+    const prevBtn = document.querySelector('.promo-carousel-arrow.prev');
+    const nextBtn = document.querySelector('.promo-carousel-arrow.next');
+    if (totalItems <= visibleItems) {
+        if (prevBtn) prevBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'none';
+        track.style.transform = 'translateX(0)';
+    } else {
+        if (prevBtn) prevBtn.style.display = 'flex';
+        if (nextBtn) nextBtn.style.display = 'flex';
+    }
+}
+
+function movePromoSlide(direction) {
+    promoCurrentIndex += direction;
+    updatePromoCarousel();
+    startPromoTimer();
+}
+
+function startPromoTimer() {
+    stopPromoTimer();
+    const visibleItems = getPromoVisibleItems();
+    const totalItems = {{ isset($promos) ? $promos->count() : 0 }};
+    if (totalItems <= visibleItems) return;
+    
+    promoInterval = setInterval(() => {
+        promoCurrentIndex++;
+        updatePromoCarousel();
+    }, 5000);
+}
+
+function stopPromoTimer() {
+    if (promoInterval) {
+        clearInterval(promoInterval);
+    }
+}
+
+window.addEventListener('resize', () => {
+    updatePromoCarousel();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const totalItems = {{ isset($promos) ? $promos->count() : 0 }};
+    if (totalItems > 0) {
+        updatePromoCarousel();
+        startPromoTimer();
+        
+        const wrapper = document.querySelector('.promo-carousel-wrapper');
+        if (wrapper) {
+            wrapper.addEventListener('mouseenter', stopPromoTimer);
+            wrapper.addEventListener('mouseleave', startPromoTimer);
+        }
+    }
+});
 </script>
 @endpush
 
@@ -347,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     .widget-select:focus {
         border-color: var(--clr-primary) !important;
-        box-shadow: 0 0 0 2px rgba(255, 90, 0, 0.15) !important;
+        box-shadow: 0 0 0 2px rgba(188, 163, 116, 0.15) !important;
     }
 
     /* Netflix Hero Carousel Styles */
@@ -445,7 +631,8 @@ document.addEventListener('DOMContentLoaded', () => {
         width: 55px;
         height: 55px;
         border-radius: 50%;
-        display: flex;
+        display: none; /* hidden on mobile/tablet */
+        opacity: 0;
         align-items: center;
         justify-content: center;
         cursor: pointer;
@@ -536,13 +723,6 @@ document.addEventListener('DOMContentLoaded', () => {
             font-size: 0.85rem !important;
             max-width: 100% !important;
         }
-        .hero-arrow {
-            width: 40px;
-            height: 40px;
-            font-size: 2rem;
-        }
-        .hero-arrow.prev { left: 0.5rem; }
-        .hero-arrow.next { right: 0.5rem; }
     }
 
     /* Section titles styling */
@@ -563,14 +743,135 @@ document.addEventListener('DOMContentLoaded', () => {
         padding-bottom: 1.5rem;
         scroll-snap-type: x mandatory;
         scrollbar-width: none; /* Firefox */
+        -webkit-overflow-scrolling: touch;
     }
     
     .scroll-container::-webkit-scrollbar {
         display: none; /* Safari and Chrome */
     }
     
+    .promo-carousel-wrapper {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        border-radius: 12px;
+    }
+    
+    .promo-carousel-track {
+        display: flex;
+        transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        gap: 1.5rem;
+    }
+    
+    .promo-carousel-slide {
+        flex: 0 0 100%;
+        max-width: 100%;
+        transition: transform 0.3s ease;
+    }
+    
+    .promo-slide-inner {
+        display: block;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255,0.05);
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .promo-banner-img {
+        width: 100%;
+        aspect-ratio: 21 / 9;
+        object-fit: cover;
+        display: block;
+        border-radius: 12px;
+        transition: transform 0.4s ease;
+    }
+    
+    @media (min-width: 640px) {
+        .promo-carousel-slide {
+            flex: 0 0 calc((100% - 1.5rem) / 2);
+        }
+    }
+    
+    @media (min-width: 1024px) {
+        .promo-carousel-slide {
+            flex: 0 0 calc((100% - 3.0rem) / 3);
+        }
+    }
+    
+    .promo-carousel-slide .promo-slide-inner:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(188, 163, 116, 0.25) !important;
+    }
+    
+    .promo-carousel-slide .promo-slide-inner:hover img {
+        transform: scale(1.03);
+    }
+    
+    /* Arrows: hidden by default, only show on desktop + section hover */
+    .promo-carousel-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(10, 10, 10, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 2.2rem;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 15;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: none; /* hidden by default (mobile/tablet) */
+        opacity: 0;
+    }
+    
+    /* Desktop only: show on section hover */
+    @media (min-width: 1024px) {
+        .promo-news-carousel-section .promo-carousel-arrow {
+            display: flex; /* always flex on desktop, but invisible */
+            opacity: 0;
+            pointer-events: none;
+        }
+        .promo-news-carousel-section:hover .promo-carousel-arrow {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .netflix-hero-carousel .hero-arrow {
+            display: flex; /* always flex on desktop, but invisible */
+            opacity: 0;
+            pointer-events: none;
+        }
+        .netflix-hero-carousel:hover .hero-arrow {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
+    
+    .promo-carousel-arrow:hover {
+        background: var(--clr-primary);
+        color: #000;
+        border-color: var(--clr-primary);
+        box-shadow: 0 0 15px rgba(188, 163, 116, 0.4);
+    }
+    
+    .promo-carousel-arrow.prev {
+        left: -8px;
+    }
+    
+    .promo-carousel-arrow.next {
+        right: -8px;
+    }
+    
     .movie-card {
-        flex: 0 0 calc(50vw - 2.25rem);
+        flex: 0 0 calc(46vw - 1.5rem);
         max-width: 190px;
         scroll-snap-align: start;
         transition: var(--transition);
@@ -619,7 +920,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     .movie-card:hover .movie-poster-wrapper {
         border-color: var(--clr-primary);
-        box-shadow: 0 10px 28px rgba(255, 90, 0, 0.15);
+        box-shadow: 0 10px 28px rgba(188, 163, 116, 0.15);
     }
 
     .badge-age-dark {
@@ -647,7 +948,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     .movie-title-heading {
-        font-size: 1.05rem; 
+        font-size: 1rem; 
         font-weight: 600; 
         line-height: 1.25; 
         margin-bottom: 0.25rem; 
@@ -671,13 +972,50 @@ document.addEventListener('DOMContentLoaded', () => {
         color: inherit;
     }
 
+    .experience-card:hover {
+        border-color: var(--clr-primary) !important;
+        transform: translateY(-4px);
+    }
+
+    @keyframes floatPopcorn {
+        0%, 100% { transform: translateY(0) rotate(-5deg); }
+        50% { transform: translateY(-10px) rotate(-2deg); }
+    }
+    @keyframes floatSoda {
+        0%, 100% { transform: translateY(0) rotate(10deg); }
+        50% { transform: translateY(-8px) rotate(15deg); }
+    }
+
+    @media (max-width: 768px) {
+
+        .scroll-container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+            margin-left: -1rem;
+            margin-right: -1rem;
+        }
+        .mfood-promo-banner {
+            padding: 2rem 1.5rem !important;
+        }
+        .mfood-visual {
+            display: none !important;
+        }
+        .app-download-banner {
+            padding: 2rem 1.5rem !important;
+        }
+        .experience-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
     @media (min-width: 640px) {
         .movie-card { flex: 0 0 calc(33.333vw - 2.5rem); }
+
     }
     
     @media (min-width: 1024px) {
         .scroll-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.75rem; overflow-x: visible; }
-        .movie-card { flex: auto; max-width: none; }
+
     }
 
     /* Responsive adjustments for Carousel */

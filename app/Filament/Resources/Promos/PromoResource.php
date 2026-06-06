@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\Schedules;
+namespace App\Filament\Resources\Promos;
 
-use App\Filament\Resources\Schedules\Pages\CreateSchedule;
-use App\Filament\Resources\Schedules\Pages\EditSchedule;
-use App\Filament\Resources\Schedules\Pages\ListSchedules;
-use App\Filament\Resources\Schedules\Schemas\ScheduleForm;
-use App\Filament\Resources\Schedules\Tables\SchedulesTable;
-use App\Models\Schedule;
+use App\Filament\Resources\Promos\Pages\CreatePromo;
+use App\Filament\Resources\Promos\Pages\EditPromo;
+use App\Filament\Resources\Promos\Pages\ListPromos;
+use App\Filament\Resources\Promos\Schemas\PromoForm;
+use App\Filament\Resources\Promos\Tables\PromosTable;
+use App\Models\Promo;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -16,11 +16,13 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ScheduleResource extends Resource
+class PromoResource extends Resource
 {
-    protected static ?string $model = Schedule::class;
+    protected static ?string $model = Promo::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSparkles;
+
+    protected static ?string $recordTitleAttribute = 'title';
 
     public static function shouldRegisterNavigation(): bool
     {
@@ -29,12 +31,12 @@ class ScheduleResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return ScheduleForm::configure($schema);
+        return PromoForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return SchedulesTable::configure($table);
+        return PromosTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -47,9 +49,9 @@ class ScheduleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListSchedules::route('/'),
-            'create' => CreateSchedule::route('/create'),
-            'edit' => EditSchedule::route('/{record}/edit'),
+            'index' => ListPromos::route('/'),
+            'create' => CreatePromo::route('/create'),
+            'edit' => EditPromo::route('/{record}/edit'),
         ];
     }
 

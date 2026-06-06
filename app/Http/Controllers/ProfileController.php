@@ -52,4 +52,16 @@ class ProfileController extends Controller
 
         return back()->with('success', 'Password berhasil diubah.');
     }
+
+    public function topUp(Request $request)
+    {
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:10000|max:10000000',
+        ]);
+
+        $user = Auth::user();
+        $user->increment('balance', $validated['amount']);
+
+        return back()->with('success', 'Top up saldo Cinevora berhasil! Saldo Anda bertambah Rp ' . number_format($validated['amount'], 0, ',', '.'));
+    }
 }

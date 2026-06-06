@@ -11,7 +11,15 @@ class Category extends Model
         'name',
         'slug',
         'icon',
+        'is_active',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
 
     // === Relationships ===
 

@@ -10,7 +10,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Using BoxIcons for mobile nav icons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -19,7 +19,7 @@
 
     <style>
         :root {
-            /* High-Contrast Immersive Dark Theme (myvue.com style) */
+            /* High-Contrast Immersive Dark Theme */
             --clr-bg: #000000;
             --clr-surface: #0a0a0a;
             --clr-surface-2: #121212;
@@ -27,13 +27,13 @@
             --clr-border: #1f1f23;
             --clr-border-dark: #2d2d30;
             
-            /* Vue Solar Orange / Warm Tone */
-            --clr-primary: #ff5a00; 
-            --clr-primary-light: #ff782e;
-            --clr-primary-dim: rgba(255, 90, 0, 0.08);
+            /* Premium XXI-Inspired Gold Theme combined with Cinevora */
+            --clr-primary: #BCA374; 
+            --clr-primary-light: #d4bc90;
+            --clr-primary-dim: rgba(188, 163, 116, 0.08);
             
-            --clr-accent: #ff5a00;
-            --clr-accent-light: #ff782e;
+            --clr-accent: #BCA374;
+            --clr-accent-light: #d4bc90;
             
             /* Text Hierarchy */
             --clr-text: #ffffff;
@@ -43,14 +43,14 @@
             --clr-error: #EF4444;
             
             /* Rectangular styling */
-            --radius-sm: 2px;
-            --radius: 4px;
-            --radius-lg: 6px;
-            --radius-full: 4px;
+            --radius-sm: 4px;
+            --radius: 8px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
             
             --font-heading: 'Oswald', sans-serif;
-            --font-body: 'Inter', sans-serif;
-            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-body: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             
             --nav-height: 72px;
             --bottom-nav-height: 64px;
@@ -222,7 +222,7 @@
         }
         .btn-primary:active, .btn-primary:hover { 
             background: var(--clr-primary-light); 
-            box-shadow: 0 4px 20px rgba(255, 90, 0, 0.45);
+            box-shadow: 0 4px 20px rgba(188, 163, 116, 0.35);
         }
         
         .btn-outline {
@@ -233,7 +233,7 @@
         .btn-outline:active, .btn-outline:hover { 
             background: var(--clr-primary); 
             color: #000000; 
-            box-shadow: 0 4px 15px rgba(255, 90, 0, 0.25);
+            box-shadow: 0 4px 15px rgba(188, 163, 116, 0.2);
         }
         
         .btn-ghost { background: transparent; color: var(--clr-text-muted); }
@@ -315,8 +315,8 @@
             min-height: calc(100vh - var(--nav-height) - var(--bottom-nav-height));
             padding-bottom: 3rem;
         }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
-        .section { padding: 2.5rem 0; }
+        .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+        .section { padding-top: 2.5rem; padding-bottom: 2.5rem; }
 
         /* === MOBILE BOTTOM NAV === */
         .bottom-nav {
@@ -366,7 +366,7 @@
         
         @media (min-width: 769px) {
             .container { padding: 0 2.5rem; }
-            .section { padding: 3.5rem 0; }
+            .section { padding-top: 3.5rem; padding-bottom: 3.5rem; }
             /* Footer for desktop */
             .footer {
                 background: #070707; border-top: 1px solid var(--clr-border);
@@ -375,6 +375,37 @@
             .footer-content {
                 max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between;
             }
+        }
+        /* === SKELETON LOADING === */
+        .skeleton-img {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .skeleton-img.loaded {
+            opacity: 1;
+        }
+        .skeleton-img-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .skeleton-img-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--clr-surface-2) 25%, var(--clr-surface-3) 50%, var(--clr-surface-2) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-pulse 1.5s ease-in-out infinite;
+            z-index: 1;
+            border-radius: inherit;
+            transition: opacity 0.4s ease;
+        }
+        .skeleton-img-wrapper.loaded::before {
+            opacity: 0;
+            pointer-events: none;
+        }
+        @keyframes skeleton-pulse {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
     </style>
 
@@ -403,7 +434,7 @@
                 </div>
             </div>
             <div style="width: 1px; height: 20px; background: var(--clr-border); margin: 0 0.5rem;"></div>
-            <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Bioskop</a>
+            <a href="{{ route('cinemas.index') }}" class="nav-link {{ request()->routeIs('cinemas.*') ? 'active' : '' }}">Bioskop</a>
             <a href="{{ route('movies.index') }}" class="nav-link {{ request()->routeIs('movies.*') ? 'active' : '' }}">Film</a>
             <a href="{{ route('cafe.menu') }}" class="nav-link {{ request()->routeIs('cafe.menu') ? 'active' : '' }}">Cafe</a>
             
@@ -546,6 +577,39 @@
             document.querySelectorAll('.city-dropdown').forEach(d => d.classList.remove('show'));
             document.querySelectorAll('.location-pill').forEach(p => p.classList.remove('open'));
         }
+    });
+    </script>
+
+    {{-- Skeleton Loading Script --}}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.skeleton-img').forEach(function(img) {
+            var parent = img.parentElement;
+            // For absolutely positioned images (like movie posters inside poster-wrapper),
+            // add skeleton class to the parent instead of wrapping
+            var computedPos = getComputedStyle(img).position;
+            if (computedPos === 'absolute') {
+                parent.classList.add('skeleton-img-wrapper');
+            } else if (!parent.classList.contains('skeleton-img-wrapper')) {
+                // For inline/block images, wrap in skeleton wrapper
+                var wrapper = document.createElement('div');
+                wrapper.className = 'skeleton-img-wrapper';
+                wrapper.style.borderRadius = 'inherit';
+                img.parentNode.insertBefore(wrapper, img);
+                wrapper.appendChild(img);
+            }
+            var w = img.closest('.skeleton-img-wrapper');
+            function onLoaded() {
+                img.classList.add('loaded');
+                if (w) w.classList.add('loaded');
+            }
+            if (img.complete && img.naturalWidth > 0) {
+                onLoaded();
+            } else {
+                img.addEventListener('load', onLoaded);
+                img.addEventListener('error', onLoaded);
+            }
+        });
     });
     </script>
 

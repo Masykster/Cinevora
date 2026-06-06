@@ -12,9 +12,23 @@
             <p class="text-muted mt-2" style="max-width: 500px; margin: 0.5rem auto 0; font-size: 0.85rem;">Lengkapi pengalaman menontonmu dengan popcorn hangat, camilan renyah, dan minuman segar favoritmu</p>
         </div>
 
+        {{-- CATEGORY FILTER PILLS --}}
+        <div class="category-filter-wrapper" style="margin-bottom: 2.5rem; overflow-x: auto; display: flex; gap: 0.75rem; padding-bottom: 0.75rem; scrollbar-width: none; -ms-overflow-style: none;">
+            <button class="filter-pill active" onclick="filterCategory('all')">
+                🍽️ Semua
+            </button>
+            @foreach($categories as $category)
+                @if($category->products->count() > 0)
+                    <button class="filter-pill" onclick="filterCategory('{{ $category->slug }}')" data-slug="{{ $category->slug }}">
+                        <span>{{ $category->icon }}</span> {{ $category->name }}
+                    </button>
+                @endif
+            @endforeach
+        </div>
+
         @foreach($categories as $category)
             @if($category->products->count() > 0)
-            <div style="margin-bottom: 3.5rem;">
+            <div class="category-section" data-category-slug="{{ $category->slug }}" style="margin-bottom: 3.5rem;">
                 <h2 class="font-heading" style="font-size: 1.3rem; font-weight: 800; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; border-left: 3px solid var(--clr-primary); padding-left: 0.75rem;">
                     <span style="font-size: 1.5rem;">{{ $category->icon }}</span> {{ $category->name }}
                 </h2>
@@ -63,7 +77,7 @@
 </section>
 
 {{-- FLOATING CART BUTTON --}}
-<div id="floatingCartBtn" onclick="toggleCart()" style="position: fixed; bottom: 2rem; right: 2rem; background: var(--clr-primary); color: #000; width: 60px; height: 60px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(255, 90, 0, 0.4); cursor: pointer; z-index: 99; transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);">
+<div id="floatingCartBtn" onclick="toggleCart()" style="position: fixed; bottom: 2rem; right: 2rem; background: var(--clr-primary); color: #000; width: 60px; height: 60px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(188, 163, 116, 0.35); cursor: pointer; z-index: 99; transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);">
     <i class='bx bxs-shopping-bag'></i>
     <span id="cartCountBadge" style="position: absolute; top: -5px; right: -5px; background: #fff; color: #000; font-size: 0.75rem; font-weight: 800; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">0</span>
 </div>
@@ -108,13 +122,46 @@
 
 @push('styles')
 <style>
+    .category-filter-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+    .filter-pill {
+        background: var(--clr-surface-2);
+        border: 1px solid var(--clr-border);
+        color: var(--clr-text-muted);
+        padding: 0.6rem 1.25rem;
+        border-radius: var(--radius-full);
+        font-family: var(--font-heading);
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        white-space: nowrap;
+        transition: var(--transition);
+        outline: none;
+    }
+    .filter-pill:hover {
+        color: #fff;
+        border-color: rgba(255,255,255,0.2);
+    }
+    .filter-pill.active {
+        background: var(--clr-primary);
+        color: #000;
+        border-color: var(--clr-primary);
+        box-shadow: 0 4px 15px rgba(188, 163, 116, 0.25);
+    }
+
     .cafe-card {
         transition: var(--transition);
     }
     .cafe-card:hover {
         transform: translateY(-4px);
         border-color: var(--clr-primary);
-        box-shadow: 0 8px 25px rgba(247, 148, 30, 0.15);
+        box-shadow: 0 8px 25px rgba(188, 163, 116, 0.15);
     }
     .add-to-cart-btn:hover {
         background: var(--clr-primary) !important;
@@ -143,6 +190,32 @@
 
 @push('scripts')
 <script>
+    function filterCategory(slug) {
+        document.querySelectorAll('.filter-pill').forEach(pill => {
+            pill.classList.remove('active');
+        });
+        
+        if (slug === 'all') {
+            const allPill = document.querySelector('.category-filter-wrapper button');
+            if (allPill) allPill.classList.add('active');
+            
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.style.display = 'block';
+            });
+        } else {
+            const activePill = document.querySelector(`.filter-pill[data-slug="${slug}"]`);
+            if (activePill) activePill.classList.add('active');
+            
+            document.querySelectorAll('.category-section').forEach(section => {
+                if (section.getAttribute('data-category-slug') === slug) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+    }
+
     let cart = JSON.parse(localStorage.getItem('cinevora_cafe_cart')) || {};
 
     function saveCart() {

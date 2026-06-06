@@ -37,7 +37,7 @@
             <div class="movie-card">
                 <a href="{{ route('movies.show', $movie) }}" class="card-link">
                     <div class="movie-poster-wrapper">
-                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img">
+                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img">
                         
                         {{-- Hover overlay matching MyVue style --}}
                         <div class="movie-card-overlay">
@@ -114,12 +114,12 @@
         background: var(--clr-primary) !important;
         color: #000000 !important;
         border-color: var(--clr-primary) !important;
-        box-shadow: 0 4px 15px rgba(255, 90, 0, 0.3);
+        box-shadow: 0 4px 15px rgba(188, 163, 116, 0.25);
     }
     
     .search-input:focus {
         border-color: var(--clr-primary) !important;
-        box-shadow: 0 0 0 2px rgba(255, 90, 0, 0.15) !important;
+        box-shadow: 0 0 0 2px rgba(188, 163, 116, 0.15) !important;
     }
     
     .movie-grid {
@@ -171,7 +171,7 @@
     
     .movie-card:hover .movie-poster-wrapper {
         border-color: var(--clr-primary);
-        box-shadow: 0 10px 28px rgba(255, 90, 0, 0.15);
+        box-shadow: 0 10px 28px rgba(188, 163, 116, 0.15);
     }
 
     .badge-age-dark {
@@ -249,7 +249,7 @@
     }
     .page-item.active .page-link {
         background: var(--clr-primary); color: #000000; border-color: var(--clr-primary);
-        box-shadow: 0 4px 15px rgba(255, 90, 0, 0.3);
+        box-shadow: 0 4px 15px rgba(188, 163, 116, 0.25);
     }
     .page-item.disabled .page-link {
         color: var(--clr-text-muted); background: var(--clr-surface-2); border-color: rgba(255, 255, 255, 0.05); opacity: 0.4; cursor: not-allowed;

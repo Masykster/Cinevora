@@ -24,6 +24,11 @@ class VoucherResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'code';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->isCinemaAdmin() ?? false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return VoucherForm::configure($schema);

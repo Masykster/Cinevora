@@ -7,7 +7,7 @@
         <h1 class="font-heading" style="font-size: 1.8rem; font-weight: 800; margin-bottom: 2rem; text-transform: uppercase; color: #fff; letter-spacing: -0.5px;">Checkout</h1>
 
         @if($transaction->remaining_seconds > 0)
-        <div class="alert badge-yellow" style="margin-bottom: 2rem; border-radius: var(--radius); padding: 1.25rem; border: 1px solid var(--clr-primary); background: rgba(247, 148, 30, 0.15); box-shadow: 0 0 15px rgba(247, 148, 30, 0.1);">
+        <div class="alert badge-yellow" style="margin-bottom: 2rem; border-radius: var(--radius); padding: 1.25rem; border: 1px solid var(--clr-primary); background: rgba(188, 163, 116, 0.1); box-shadow: 0 0 15px rgba(188, 163, 116, 0.08);">
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; width: 100%;">
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
                     <span style="font-size: 1.5rem;">⏳</span>
@@ -172,6 +172,37 @@
 
                     <form method="POST" action="{{ route('checkout.pay', $transaction) }}" style="margin-top: 1.5rem;">
                         @csrf
+                        
+                        <div style="margin-bottom: 1.5rem; text-align: left;">
+                            <label class="form-label" style="color: #fff; font-size: 0.8rem; font-weight: 700; display: block; margin-bottom: 0.75rem; letter-spacing: 0.5px;">PILIH METODE PEMBAYARAN</label>
+                            
+                            <!-- Option 1: Balance -->
+                            <label class="payment-method-option {{ Auth::user()->balance >= $transaction->grand_total ? '' : 'disabled-option' }}" style="display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1rem; border: 1px solid var(--clr-border); border-radius: 4px; background: var(--clr-surface-2); margin-bottom: 0.5rem; cursor: {{ Auth::user()->balance >= $transaction->grand_total ? 'pointer' : 'not-allowed' }}; transition: var(--transition); opacity: {{ Auth::user()->balance >= $transaction->grand_total ? '1' : '0.6' }};">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <input type="radio" name="payment_method" value="balance" {{ Auth::user()->balance >= $transaction->grand_total ? 'checked' : 'disabled' }} style="accent-color: var(--clr-primary);">
+                                    <div>
+                                        <strong style="color: #fff; font-size: 0.85rem; display: block;">Saldo Cinevora</strong>
+                                        <span class="text-xs text-muted">Saldo Anda: Rp {{ number_format(Auth::user()->balance, 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                                @if(Auth::user()->balance < $transaction->grand_total)
+                                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+                                        <span class="badge" style="background: rgba(239,68,68,0.15); color: #EF4444; border: 1px solid #EF4444; font-size: 0.6rem; padding: 2px 4px;">Saldo Kurang</span>
+                                        <a href="{{ route('profile.index') }}?tab=balance" style="font-size: 0.7rem; color: var(--clr-primary); text-decoration: underline; font-weight: 600;">Top Up</a>
+                                    </div>
+                                @endif
+                            </label>
+
+                            <!-- Option 2: Xendit -->
+                            <label class="payment-method-option" style="display: flex; align-items: center; padding: 0.85rem 1rem; border: 1px solid var(--clr-border); border-radius: 4px; background: var(--clr-surface-2); cursor: pointer; transition: var(--transition);">
+                                <input type="radio" name="payment_method" value="xendit" {{ Auth::user()->balance < $transaction->grand_total ? 'checked' : '' }} style="accent-color: var(--clr-primary); margin-right: 0.75rem;">
+                                <div>
+                                    <strong style="color: #fff; font-size: 0.85rem; display: block;">Instant Payment (Xendit)</strong>
+                                    <span class="text-xs text-muted">Virtual Account, QRIS, E-Wallet, Card</span>
+                                </div>
+                            </label>
+                        </div>
+
                         <button type="submit" class="btn btn-primary btn-block" style="padding: 0.9rem; border-radius: 4px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; font-size: 0.9rem;" onclick="return confirm('Konfirmasi pembayaran?')">
                             💳 BAYAR SEKARANG
                         </button>
@@ -334,6 +365,15 @@ const timer = setInterval(() => {
 
 @push('styles')
 <style>
+    .payment-method-option:hover {
+        border-color: var(--clr-primary) !important;
+        background: var(--clr-surface-3) !important;
+    }
+    .payment-method-option.disabled-option:hover {
+        border-color: var(--clr-border) !important;
+        background: var(--clr-surface-2) !important;
+    }
+
     .checkout-layout {
         display: grid; 
         grid-template-columns: 1fr 350px; 

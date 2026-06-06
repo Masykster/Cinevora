@@ -21,6 +21,10 @@ class HomeController extends Controller
 
         $cinemas = \App\Models\Cinema::orderBy('name')->get();
 
-        return view('home', compact('nowPlaying', 'comingSoon', 'cinemas'));
+        $promos = \App\Models\Promo::active()
+            ->orderBy('sort_order')
+            ->get();
+
+        return view('home', compact('nowPlaying', 'comingSoon', 'cinemas', 'promos'));
     }
 }

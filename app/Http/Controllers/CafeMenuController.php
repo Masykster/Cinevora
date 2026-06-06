@@ -10,7 +10,7 @@ class CafeMenuController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Category::with(['products' => function ($q) {
+        $categories = Category::where('is_active', true)->with(['products' => function ($q) {
             $q->available()->orderBy('name');
         }])->get();
 

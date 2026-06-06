@@ -13,7 +13,7 @@
         {{-- POSTER --}}
         <div style="width: 160px; flex-shrink: 0; box-shadow: 0 15px 35px rgba(0,0,0,0.95);">
             <div style="border-radius: var(--radius); overflow: hidden; border: 1px solid rgba(255,255,255,0.08);">
-                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" style="width: 100%; display: block;">
+                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="skeleton-img" style="width: 100%; display: block;">
             </div>
         </div>
 
@@ -90,7 +90,7 @@
                         {{-- Avatar Circle --}}
                         @if(!empty($movie->cast_images) && isset($movie->cast_images[$actor]) && $movie->cast_images[$actor])
                             <div class="cast-avatar">
-                                <img src="{{ $movie->cast_images[$actor] }}" alt="{{ $actor }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                <img src="{{ $movie->cast_images[$actor] }}" alt="{{ $actor }}" class="skeleton-img" style="width: 100%; height: 100%; object-fit: cover; display: block;">
                             </div>
                         @else
                             <div class="cast-avatar cast-initials">
@@ -284,7 +284,7 @@ document.addEventListener('keydown', function(e) {
         background: var(--clr-primary) !important;
         color: #000000 !important;
         border-color: var(--clr-primary) !important;
-        box-shadow: 0 4px 15px rgba(255, 90, 0, 0.3) !important;
+        box-shadow: 0 4px 15px rgba(188, 163, 116, 0.25) !important;
     }
     
     .date-tab-inactive {
@@ -344,7 +344,7 @@ document.addEventListener('keydown', function(e) {
         color: #000000;
         border-color: var(--clr-primary);
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(255, 90, 0, 0.4);
+        box-shadow: 0 4px 15px rgba(188, 163, 116, 0.3);
     }
 
     /* Hide last border in studio loop */
@@ -373,7 +373,7 @@ document.addEventListener('keydown', function(e) {
         height: 70px;
         border-radius: 50%;
         border: 2px solid rgba(255, 255, 255, 0.7);
-        background: rgba(255, 90, 0, 0.2);
+        background: rgba(188, 163, 116, 0.15);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -382,8 +382,8 @@ document.addEventListener('keydown', function(e) {
     }
     .play-trailer-btn:hover .play-trailer-circle {
         border-color: var(--clr-primary);
-        background: rgba(255, 90, 0, 0.45);
-        box-shadow: 0 0 30px rgba(255, 90, 0, 0.4);
+        background: rgba(188, 163, 116, 0.35);
+        box-shadow: 0 0 30px rgba(188, 163, 116, 0.3);
     }
     .play-trailer-label {
         font-family: var(--font-heading);
@@ -504,7 +504,7 @@ document.addEventListener('keydown', function(e) {
     }
     .cast-member:hover .cast-avatar {
         border-color: var(--clr-primary) !important;
-        box-shadow: 0 0 15px rgba(255, 90, 0, 0.45) !important;
+        box-shadow: 0 0 15px rgba(188, 163, 116, 0.35) !important;
     }
     .cast-name {
         font-size: 0.8rem;

@@ -10,34 +10,50 @@ class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        $food = Category::where('slug', 'food')->first();
-        $beverage = Category::where('slug', 'beverage')->first();
-        $snack = Category::where('slug', 'snack')->first();
+        $promo = Category::where('slug', 'promo')->first();
         $combo = Category::where('slug', 'combo')->first();
+        $popcorn = Category::where('slug', 'popcorn')->first();
+        $fritters = Category::where('slug', 'fritters')->first();
+        $lightMeal = Category::where('slug', 'light-meal')->first();
+        $bakery = Category::where('slug', 'bakery')->first();
+        $drinks = Category::where('slug', 'drinks')->first();
+        $merchandise = Category::where('slug', 'merchandise')->first();
 
         $products = [
-            // Food
-            ['category_id' => $food->id, 'name' => 'Hot Dog Classic', 'description' => 'Hot dog dengan saus mustard dan ketchup.', 'price' => 28000],
-            ['category_id' => $food->id, 'name' => 'Chicken Nuggets (6 pcs)', 'description' => 'Nugget ayam crispy dengan saus pilihan.', 'price' => 32000],
-            ['category_id' => $food->id, 'name' => 'French Fries Large', 'description' => 'Kentang goreng renyah ukuran besar.', 'price' => 25000],
-            ['category_id' => $food->id, 'name' => 'Cheese Burger', 'description' => 'Burger daging sapi dengan keju cheddar melted.', 'price' => 38000],
-
-            // Beverage
-            ['category_id' => $beverage->id, 'name' => 'Coca Cola Large', 'description' => 'Coca Cola dingin ukuran besar (500ml).', 'price' => 22000],
-            ['category_id' => $beverage->id, 'name' => 'Iced Tea', 'description' => 'Es teh manis segar.', 'price' => 15000],
-            ['category_id' => $beverage->id, 'name' => 'Mineral Water', 'description' => 'Air mineral 600ml.', 'price' => 10000],
-            ['category_id' => $beverage->id, 'name' => 'Caramel Frappe', 'description' => 'Minuman kopi blended dengan karamel dan whipped cream.', 'price' => 35000],
-            ['category_id' => $beverage->id, 'name' => 'Mango Smoothie', 'description' => 'Smoothie mangga segar dengan yogurt.', 'price' => 30000],
-
-            // Snack
-            ['category_id' => $snack->id, 'name' => 'Popcorn Small', 'description' => 'Popcorn caramel ukuran kecil.', 'price' => 20000],
-            ['category_id' => $snack->id, 'name' => 'Popcorn Large', 'description' => 'Popcorn caramel ukuran besar.', 'price' => 35000],
-            ['category_id' => $snack->id, 'name' => 'Nachos & Cheese', 'description' => 'Tortilla chips dengan saus keju hangat.', 'price' => 30000],
-            ['category_id' => $snack->id, 'name' => 'Onion Rings', 'description' => 'Bawang goreng crispy.', 'price' => 22000],
+            // Promo
+            ['category_id' => $promo->id, 'name' => 'Special XXI Promo Combo', 'description' => 'Popcorn Sweet Caramel Small + Iced Milo. Hemat s.d 30%!', 'price' => 45000],
 
             // Combo
-            ['category_id' => $combo->id, 'name' => 'Movie Combo A', 'description' => 'Popcorn Large + 2x Coca Cola Large. Hemat Rp12.000!', 'price' => 65000],
-            ['category_id' => $combo->id, 'name' => 'Movie Combo B', 'description' => 'Popcorn Large + 2x Iced Tea + Nachos & Cheese. Hemat Rp15.000!', 'price' => 75000],
+            ['category_id' => $combo->id, 'name' => 'Movie Combo Double', 'description' => 'Popcorn Large + 2x Coca Cola Large. Pas buat nonton berdua.', 'price' => 85000],
+            ['category_id' => $combo->id, 'name' => 'Single Combo', 'description' => 'Popcorn Small + 1x Coca Cola Large.', 'price' => 50000],
+
+            // Popcorn
+            ['category_id' => $popcorn->id, 'name' => 'Popcorn Sweet Caramel Large', 'description' => 'Popcorn manis karamel renyah ukuran besar.', 'price' => 38000],
+            ['category_id' => $popcorn->id, 'name' => 'Popcorn Sweet Caramel Small', 'description' => 'Popcorn manis karamel renyah ukuran kecil.', 'price' => 25000],
+            ['category_id' => $popcorn->id, 'name' => 'Popcorn Salty Butter Large', 'description' => 'Popcorn gurih mentega ukuran besar.', 'price' => 35000],
+
+            // Fritters
+            ['category_id' => $fritters->id, 'name' => 'Onion Rings Crispy', 'description' => 'Bawang bombay goreng tepung renyah dengan saus.', 'price' => 25000],
+            ['category_id' => $fritters->id, 'name' => 'French Fries Salted', 'description' => 'Kentang goreng klasik dengan garam gurih.', 'price' => 28000],
+
+            // Light Meal
+            ['category_id' => $lightMeal->id, 'name' => 'XXI Hot Dog Classic', 'description' => 'Hot dog dengan sosis sapi premium dan mustard.', 'price' => 32000],
+            ['category_id' => $lightMeal->id, 'name' => 'Cheese Burger Double', 'description' => 'Burger keju ganda dengan beef patty panggang.', 'price' => 42000],
+            ['category_id' => $lightMeal->id, 'name' => 'Chicken Nuggets Premium', 'description' => 'Nugget dada ayam olahan berkualitas isi 6 pcs.', 'price' => 35000],
+
+            // Bakery
+            ['category_id' => $bakery->id, 'name' => 'Croissant Butter Warm', 'description' => 'Roti croissant mentega hangat renyah.', 'price' => 22000],
+            ['category_id' => $bakery->id, 'name' => 'Choco Lava Cake', 'description' => 'Kue cokelat panggang dengan cokelat meleleh di dalam.', 'price' => 28000],
+
+            // Drinks
+            ['category_id' => $drinks->id, 'name' => 'Coca Cola Large', 'description' => 'Coca Cola dingin ukuran 500ml.', 'price' => 22000],
+            ['category_id' => $drinks->id, 'name' => 'Iced Tea Sweet', 'description' => 'Es teh manis segar pelepas dahaga.', 'price' => 15000],
+            ['category_id' => $drinks->id, 'name' => 'Caramel Frappe Coffee', 'description' => 'Blended coffee dengan saus karamel dan whipped cream.', 'price' => 38000],
+            ['category_id' => $drinks->id, 'name' => 'Mineral Water Nestlé', 'description' => 'Air mineral botol 600ml dingin.', 'price' => 12000],
+
+            // Merchandise
+            ['category_id' => $merchandise->id, 'name' => 'Collectible Cup: Spider-Man', 'description' => 'Gelas collectible edisi khusus Spider-Man.', 'price' => 65000],
+            ['category_id' => $merchandise->id, 'name' => 'IMAX Exclusive Tumbler', 'description' => 'Tumbler stainless steel eksklusif logo IMAX.', 'price' => 95000],
         ];
 
         foreach ($products as $product) {

@@ -31,7 +31,12 @@ class TransactionController extends Controller
 
         $transaction->load(['tickets.schedule.movie', 'tickets.seat', 'tickets.schedule.studio.cinema', 'orderItems.product', 'voucher']);
 
-        $products = Product::available()->with('category')->get();
+        $products = Product::available()
+            ->whereHas('category', function ($q) {
+                $q->where('is_active', true);
+            })
+            ->with('category')
+            ->get();
 
         return view('checkout.index', compact('transaction', 'products'));
     }
@@ -193,9 +198,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * Process payment via Xendit Invoice API.
+     * Process payment via Xendit Invoice API or Cinevora Balance.
      */
-    public function pay(Transaction $transaction)
+    public function pay(Request $request, Transaction $transaction)
     {
         $this->authorize($transaction);
 
@@ -206,6 +211,49 @@ class TransactionController extends Controller
         if ($transaction->isExpired()) {
             $transaction->update(['status' => 'cancelled']);
             return redirect()->route('home')->with('error', 'Transaksi telah kedaluwarsa. Kursi telah dilepas.');
+        }
+
+        $paymentMethod = $request->input('payment_method', 'xendit');
+
+        if ($paymentMethod === 'balance') {
+            $user = Auth::user();
+            if ($user->balance < $transaction->grand_total) {
+                return back()->with('error', 'Saldo Cinevora tidak mencukupi. Silakan top up saldo Anda.');
+            }
+
+            try {
+                DB::transaction(function () use ($transaction, $user) {
+                    // Deduct balance
+                    $user->decrement('balance', $transaction->grand_total);
+
+                    // Update transaction
+                    $transaction->status = 'paid';
+                    $transaction->paid_at = now();
+                    $transaction->expires_at = null;
+                    $transaction->payment_method = 'Cinevora Balance';
+                    $transaction->booking_code = Transaction::generateBookingCode();
+                    $transaction->save();
+
+                    // Decrement voucher quota
+                    if ($transaction->voucher_id) {
+                        Voucher::where('id', $transaction->voucher_id)
+                            ->where('used_count', '<', DB::raw('quota'))
+                            ->increment('used_count');
+                    }
+
+                    // Create cafe order if F&B items exist
+                    if ($transaction->orderItems()->count() > 0) {
+                        CafeOrder::firstOrCreate(
+                            ['transaction_id' => $transaction->id],
+                            ['status' => 'pending']
+                        );
+                    }
+                });
+
+                return redirect()->route('checkout.invoice', $transaction)->with('success', 'Pembayaran menggunakan Saldo Cinevora berhasil!');
+            } catch (\Exception $e) {
+                return back()->with('error', 'Gagal memproses pembayaran saldo: ' . $e->getMessage());
+            }
         }
 
         // If already has Xendit invoice, redirect to it
