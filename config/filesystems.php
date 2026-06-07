@@ -60,6 +60,13 @@ return [
             'report' => false,
         ],
 
+        'supabase' => [
+            'driver' => 'supabase',
+            'endpoint' => env('SUPABASE_STORAGE_URL'),
+            'key' => env('SUPABASE_STORAGE_KEY'),
+            'bucket' => env('SUPABASE_STORAGE_BUCKET'),
+        ],
+
     ],
 
     /*

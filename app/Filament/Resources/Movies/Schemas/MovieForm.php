@@ -140,10 +140,55 @@ class MovieForm
                 TextInput::make('trailer_url')
                     ->url()
                     ->maxLength(255),
-                TextInput::make('poster')
-                    ->maxLength(255),
-                TextInput::make('banner')
-                    ->maxLength(255),
+                \Filament\Schemas\Components\Grid::make(2)
+                    ->schema([
+                        \Filament\Schemas\Components\Group::make([
+                            TextInput::make('poster')
+                                ->label('Poster URL')
+                                ->maxLength(255),
+                            FileUpload::make('poster_upload')
+                                ->label('Or Upload Poster')
+                                ->disk('supabase')
+                                ->directory('movies/posters')
+                                ->image()
+                                ->live()
+                                ->dehydrated(false)
+                                ->formatStateUsing(function ($record) {
+                                    if ($record && $record->poster && !str_starts_with($record->poster, 'http')) {
+                                        return $record->poster;
+                                    }
+                                    return null;
+                                })
+                                ->afterStateUpdated(function ($state, callable $set) {
+                                    if ($state) {
+                                        $set('poster', $state);
+                                    }
+                                }),
+                        ]),
+                        \Filament\Schemas\Components\Group::make([
+                            TextInput::make('banner')
+                                ->label('Banner URL')
+                                ->maxLength(255),
+                            FileUpload::make('banner_upload')
+                                ->label('Or Upload Banner')
+                                ->disk('supabase')
+                                ->directory('movies/banners')
+                                ->image()
+                                ->live()
+                                ->dehydrated(false)
+                                ->formatStateUsing(function ($record) {
+                                    if ($record && $record->banner && !str_starts_with($record->banner, 'http')) {
+                                        return $record->banner;
+                                    }
+                                    return null;
+                                })
+                                ->afterStateUpdated(function ($state, callable $set) {
+                                    if ($state) {
+                                        $set('banner', $state);
+                                    }
+                                }),
+                        ]),
+                    ]),
                 Textarea::make('synopsis')
                     ->required()
                     ->columnSpanFull(),

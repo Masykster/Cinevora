@@ -37,7 +37,7 @@ class UserForm
                     ->maxLength(20),
                 \Filament\Forms\Components\FileUpload::make('avatar')
                     ->image()
-                    ->disk('public')
+                    ->disk('supabase')
                     ->directory('users/avatars')
                     ->maxSize(1024),
             ]);

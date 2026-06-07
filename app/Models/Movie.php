@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Movie extends Model
 {
@@ -86,9 +87,7 @@ class Movie extends Model
             if (str_starts_with($this->poster, 'http')) {
                 return $this->poster;
             }
-            if (file_exists(public_path('storage/' . $this->poster))) {
-                return asset('storage/' . $this->poster);
-            }
+            return Storage::disk('supabase')->url($this->poster);
         }
         return asset('images/placeholder-movie.jpg');
     }
@@ -99,9 +98,7 @@ class Movie extends Model
             if (str_starts_with($this->banner, 'http')) {
                 return $this->banner;
             }
-            if (file_exists(public_path('storage/' . $this->banner))) {
-                return asset('storage/' . $this->banner);
-            }
+            return Storage::disk('supabase')->url($this->banner);
         }
         return $this->poster_url;
     }

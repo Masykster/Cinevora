@@ -24,7 +24,9 @@ class CinemaForm
                 Textarea::make('description')
                     ->columnSpanFull(),
                 FileUpload::make('image')
-                    ->image(),
+                    ->image()
+                    ->disk('supabase')
+                    ->directory('cinemas'),
                 TextInput::make('phone')
                     ->tel(),
                 Toggle::make('is_active')

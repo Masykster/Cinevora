@@ -36,7 +36,7 @@ class ProductForm
                     ->minValue(0),
                 FileUpload::make('image')
                     ->image()
-                    ->disk('public')
+                    ->disk('supabase')
                     ->directory('cafe/products')
                     ->maxSize(1024),
                 Toggle::make('is_available')

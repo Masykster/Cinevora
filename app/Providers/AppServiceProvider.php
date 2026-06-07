@@ -39,5 +39,20 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.app', function ($view) {
             $view->with('navCities', Cinema::distinct()->orderBy('city')->pluck('city'));
         });
+
+        // Register custom Supabase Storage driver
+        \Illuminate\Support\Facades\Storage::extend('supabase', function ($app, $config) {
+            $adapter = new \App\Filesystem\SupabaseStorageAdapter(
+                $config['endpoint'],
+                $config['key'],
+                $config['bucket']
+            );
+
+            return new \Illuminate\Filesystem\FilesystemAdapter(
+                new \League\Flysystem\Filesystem($adapter),
+                $adapter,
+                $config
+            );
+        });
     }
 }

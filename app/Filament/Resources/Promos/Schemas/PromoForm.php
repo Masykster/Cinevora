@@ -17,6 +17,7 @@ class PromoForm
                     ->required(),
                 FileUpload::make('image_path')
                     ->image()
+                    ->disk('supabase')
                     ->directory('promos')
                     ->required(),
                 TextInput::make('link_url')

@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Support\Facades\Storage;
 
 #[Fillable(['name', 'email', 'password', 'role', 'phone', 'avatar', 'balance'])]
 #[Hidden(['password', 'remember_token'])]
@@ -66,5 +67,18 @@ class User extends Authenticatable implements FilamentUser
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    // === Helpers ===
+
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar) {
+            if (str_starts_with($this->avatar, 'http')) {
+                return $this->avatar;
+            }
+            return Storage::disk('supabase')->url($this->avatar);
+        }
+        return 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?d=mp';
     }
 }

@@ -35,25 +35,39 @@
 
                 <div class="grid grid-3 gap-3">
                     @foreach($category->products as $product)
-                        <div class="card cafe-card" style="display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--clr-border); background: var(--clr-surface); box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
-                            <div style="height: 150px; background: var(--clr-surface-2); display: flex; align-items: center; justify-content: center; font-size: 3.5rem; border-bottom: 1px solid var(--clr-border); position: relative;">
-                                <div style="position: absolute; width: 80px; height: 80px; border-radius: 50%; background: var(--clr-primary-dim); filter: blur(15px); z-index: 1;"></div>
-                                <span style="position: relative; z-index: 2;">{{ $category->icon }}</span>
-                            </div>
-                            <div style="padding: 1.25rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div class="card cafe-card" style="display: flex; flex-direction: row; gap: 1rem; padding: 1.25rem; overflow: hidden; border: 1px solid var(--clr-border); background: var(--clr-surface); box-shadow: 0 4px 15px rgba(0,0,0,0.5); min-height: 160px; border-radius: 12px; transition: var(--transition);">
+                            {{-- Left side: Text Details --}}
+                            <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0;">
                                 <div>
-                                    <h3 style="font-family: var(--font-heading); font-weight: 800; font-size: 1rem; color: #fff; margin-bottom: 0.35rem; letter-spacing: -0.2px;">{{ $product->name }}</h3>
-                                    <p class="text-muted text-xs" style="line-height: 1.4; margin-bottom: 1rem;">{{ $product->description }}</p>
+                                    <h3 style="font-family: var(--font-heading); font-weight: 800; font-size: 1rem; color: #fff; margin-bottom: 0.35rem; letter-spacing: -0.2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $product->name }}</h3>
+                                    <p class="text-muted text-xs" style="line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0;">{{ $product->description }}</p>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--clr-border); padding-top: 0.75rem;">
-                                    <span style="font-family: var(--font-heading); font-weight: 800; color: var(--clr-primary); font-size: 1.1rem;">
+                                <div style="margin-top: auto; padding-top: 0.5rem;">
+                                    <span style="font-family: var(--font-heading); font-weight: 800; color: var(--clr-primary); font-size: 1.1rem; display: block;">
                                         {{ $product->formatted_price }}
                                     </span>
-                                    @if(!$product->is_available)
-                                        <span class="badge" style="background: var(--clr-error); color: #fff; font-size: 0.6rem; text-transform: uppercase;">Habis</span>
+                                </div>
+                            </div>
+
+                            {{-- Right side: Image and Button --}}
+                            <div style="width: 100px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; flex-shrink: 0;">
+                                {{-- Square Image Container --}}
+                                <div style="width: 100px; height: 100px; background: var(--clr-surface-2); display: flex; align-items: center; justify-content: center; border-radius: 12px; overflow: hidden; border: 1px solid var(--clr-border); position: relative; flex-shrink: 0;">
+                                    @if($product->image)
+                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="skeleton-img product-image" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
                                     @else
-                                        <button onclick="addToCart({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $product->price }}, '{{ $category->icon }}')" class="btn btn-outline btn-sm add-to-cart-btn" style="border-radius: 4px; font-weight: 700; padding: 0.3rem 0.6rem; font-size: 0.75rem; text-transform: uppercase; border-width: 1px;">
-                                            + Tambah
+                                        <div style="position: absolute; width: 50px; height: 50px; border-radius: 50%; background: var(--clr-primary-dim); filter: blur(10px); z-index: 1;"></div>
+                                        <span style="font-size: 2.2rem; position: relative; z-index: 2;">{{ $category->icon }}</span>
+                                    @endif
+                                </div>
+
+                                {{-- Tambah Button --}}
+                                <div style="width: 100%; margin-top: 0.75rem; flex-shrink: 0;">
+                                    @if(!$product->is_available)
+                                        <span class="badge" style="background: var(--clr-error); color: #fff; font-size: 0.6rem; text-transform: uppercase; width: 100%; text-align: center; display: block; padding: 0.35rem 0; border-radius: 50px;">Habis</span>
+                                    @else
+                                        <button onclick="addToCart({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $product->price }}, '{{ $category->icon }}')" class="btn btn-outline btn-sm add-to-cart-btn" style="border-radius: 50px; font-weight: 700; width: 100%; padding: 0.35rem 0; font-size: 0.75rem; text-transform: uppercase; border-width: 1.5px; border-color: var(--clr-border-dark); color: #fff; text-align: center; cursor: pointer; transition: var(--transition);">
+                                            Tambah
                                         </button>
                                     @endif
                                 </div>
@@ -163,9 +177,13 @@
         border-color: var(--clr-primary);
         box-shadow: 0 8px 25px rgba(188, 163, 116, 0.15);
     }
+    .cafe-card:hover .product-image {
+        transform: scale(1.08);
+    }
     .add-to-cart-btn:hover {
         background: var(--clr-primary) !important;
         color: #000 !important;
+        border-color: var(--clr-primary) !important;
     }
     
     #floatingCartBtn:hover {

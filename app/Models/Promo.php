@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Promo extends Model
 {
@@ -40,7 +41,7 @@ class Promo extends Model
             if (str_starts_with($this->image_path, 'http')) {
                 return $this->image_path;
             }
-            return asset('storage/' . $this->image_path);
+            return Storage::disk('supabase')->url($this->image_path);
         }
         return asset('images/placeholder-promo.jpg');
     }

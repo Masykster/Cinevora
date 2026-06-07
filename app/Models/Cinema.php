@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Cinema extends Model
 {
@@ -38,5 +39,18 @@ class Cinema extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    // === Helpers ===
+
+    public function getImageUrlAttribute(): string
+    {
+        if ($this->image) {
+            if (str_starts_with($this->image, 'http')) {
+                return $this->image;
+            }
+            return Storage::disk('supabase')->url($this->image);
+        }
+        return asset('images/placeholder-cinema.jpg');
     }
 }
