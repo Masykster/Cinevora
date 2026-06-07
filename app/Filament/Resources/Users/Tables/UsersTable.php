@@ -28,7 +28,7 @@ class UsersTable
                 TextColumn::make('phone')
                     ->searchable(),
                 ImageColumn::make('avatar')
-                    ->disk('supabase')
+                    ->disk('public_path')
                     ->circular(),
                 TextColumn::make('created_at')
                     ->dateTime()

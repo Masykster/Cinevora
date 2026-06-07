@@ -67,6 +67,15 @@ return [
             'bucket' => env('SUPABASE_STORAGE_BUCKET'),
         ],
 
+        'public_path' => [
+            'driver' => 'local',
+            'root' => public_path(),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/'),
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
     ],
 
     /*

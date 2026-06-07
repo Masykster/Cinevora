@@ -1,0 +1,1 @@
+<?php echo App\Models\Schedule::where('movie_id', 53)->where('show_date', 'like', '2026-06-07%')->whereHas('studio.cinema', function($q){ $q->where('name', 'like', '%Pondok Indah%'); })->get()->map(function($s) { return $s->id . ' | ' . $s->show_date->format('Y-m-d') . ' ' . $s->show_time . ' - ' . ($s->is_bookable ? 'YES' : 'NO'); })->toJson(JSON_PRETTY_PRINT);

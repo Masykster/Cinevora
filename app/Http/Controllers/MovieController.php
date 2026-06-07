@@ -14,18 +14,14 @@ class MovieController extends Controller
         $query = Movie::query();
 
         // Filter by status using dynamic scopes
-        if ($request->filled('status')) {
-            if ($request->status === 'now_playing') {
-                $query->nowPlaying();
-            } elseif ($request->status === 'coming_soon') {
-                $query->comingSoon();
-            } else {
-                $query->where('status', $request->status);
-            }
+        $status = $request->input('status', 'now_playing');
+        
+        if ($status === 'now_playing') {
+            $query->nowPlaying();
+        } elseif ($status === 'coming_soon') {
+            $query->comingSoon();
         } else {
-            $query->where(function ($q) {
-                $q->nowPlaying()->orWhere(fn($sq) => $sq->comingSoon());
-            });
+            $query->where('status', $status);
         }
 
         // Filter by genre

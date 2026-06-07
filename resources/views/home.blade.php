@@ -145,7 +145,7 @@
                         <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img">
                         
                         {{-- Immersive Hover overlay with Gold button --}}
-                        <div class="movie-card-overlay" style="flex-direction: column; gap: 0.5rem;">
+                        <div class="movie-card-overlay hide-on-mobile" style="flex-direction: column; gap: 0.5rem;">
                             @if($movie->trailer_url)
                                 <span onclick="window.open('{{ $movie->trailer_url }}', '_blank'); event.preventDefault(); event.stopPropagation();" class="btn btn-outline btn-sm" style="font-weight: 700; font-size: 0.75rem; padding: 0.5rem 1.25rem; text-transform: uppercase; border-radius: 4px; display: inline-block; text-align: center; border-width: 2px; width: 130px; cursor: pointer; transition: var(--transition);">Lihat Trailer</span>
                             @endif
@@ -153,7 +153,7 @@
                         </div>
                         
                         {{-- Top Left Badges --}}
-                        <div style="position: absolute; top: 0.75rem; left: 0.75rem; display: flex; flex-direction: column; gap: 0.35rem; z-index: 5;">
+                        <div class="hide-on-mobile" style="position: absolute; top: 0.75rem; left: 0.75rem; display: flex; flex-direction: column; gap: 0.35rem; z-index: 5;">
                             <span class="badge-age-dark">{{ $movie->age_rating }}</span>
                             <span class="badge-format">2D</span>
                         </div>
@@ -162,15 +162,38 @@
                 
                 {{-- Movie Info --}}
                 <div style="padding: 0.75rem 0.25rem 0 0.25rem;">
-                    <h3 class="font-heading movie-title-heading">
-                        <a href="{{ route('movies.show', $movie) }}" style="color: inherit; text-decoration: none;">
-                            {{ $movie->title }}
-                        </a>
-                    </h3>
-                    <p style="font-size: 0.75rem; color: var(--clr-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">{{ $movie->genre }}</p>
-                    <div style="display: flex; align-items: center; gap: 0.25rem; margin-top: 0.35rem;">
-                        <i class='bx bxs-star' style="color: var(--clr-primary); font-size: 0.9rem;"></i>
-                        <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">{{ number_format($movie->rating, 1) }}</span>
+                    {{-- Mobile Specific Info (Buttons below poster) --}}
+                    <div class="show-on-mobile" style="margin-top: 0.25rem;">
+                        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.75rem;">
+                            @if($movie->trailer_url)
+                                <a href="{{ $movie->trailer_url }}" target="_blank" class="btn btn-outline btn-sm" style="border-radius: 20px; font-size: 0.75rem; padding: 0.45rem 0.9rem; border-color: rgba(255,255,255,0.4); color: white;"><i class='bx bx-play' style="font-size:1.1rem;"></i> Lihat trailer</a>
+                            @endif
+                            <a href="{{ route('movies.show', $movie) }}" class="btn btn-primary btn-sm" style="border-radius: 20px; font-size: 0.75rem; padding: 0.45rem 1.1rem; background: #e5e5e5; color: black; border: none;"><i class='bx bx-ticket' style="font-size:1rem;"></i> Beli tiket</a>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                            <span class="badge-format" style="border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); font-size: 0.6rem; padding: 1px 6px;">2D</span>
+                            <span class="badge-age-dark" style="background: rgba(255,255,0,0.15); border-color: transparent; color: #ffeb3b; font-size: 0.6rem; padding: 1px 6px;">{{ $movie->age_rating }}</span>
+                            <span class="badge-format" style="border-color: transparent; color: rgba(255,255,255,0.6); font-size: 0.6rem; padding: 1px 0; text-transform: lowercase;">{{ floor($movie->duration / 60) }}h {{ $movie->duration % 60 }}m</span>
+                        </div>
+                        <h3 class="font-heading" style="text-align: center; font-size: 1rem; font-weight: 700; color: white; text-transform: uppercase; margin-bottom: 0;">
+                            <a href="{{ route('movies.show', $movie) }}" style="color: inherit; text-decoration: none;">
+                                {{ \Illuminate\Support\Str::limit($movie->title, 30) }}
+                            </a>
+                        </h3>
+                    </div>
+
+                    {{-- Desktop Original Info --}}
+                    <div class="hide-on-mobile">
+                        <h3 class="font-heading movie-title-heading">
+                            <a href="{{ route('movies.show', $movie) }}" style="color: inherit; text-decoration: none;">
+                                {{ $movie->title }}
+                            </a>
+                        </h3>
+                        <p style="font-size: 0.75rem; color: var(--clr-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">{{ $movie->genre }}</p>
+                        <div style="display: flex; align-items: center; gap: 0.25rem; margin-top: 0.35rem;">
+                            <i class='bx bxs-star' style="color: var(--clr-primary); font-size: 0.9rem;"></i>
+                            <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">{{ number_format($movie->rating, 1) }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -202,21 +225,45 @@
                             <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img">
                             
                             {{-- Top Badges --}}
-                            <div style="position: absolute; top: 0.75rem; left: 0.75rem; display: flex; gap: 0.25rem; z-index: 5;">
+                            <div class="hide-on-mobile" style="position: absolute; top: 0.75rem; left: 0.75rem; display: flex; gap: 0.25rem; z-index: 5;">
                                 <span class="badge-age-dark" style="background: #252525; border-color: #3a3a3a;">CS</span>
                             </div>
                         </div>
                     </a>
                     <div style="padding: 0.75rem 0.25rem 0 0.25rem;">
-                        <h3 class="font-heading movie-title-heading">
-                            <a href="{{ route('movies.show', $movie) }}" style="color: inherit; text-decoration: none;">
-                                {{ $movie->title }}
-                            </a>
-                        </h3>
-                        <p style="font-size: 0.75rem; color: var(--clr-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">{{ $movie->genre }}</p>
-                        @if($movie->release_date)
-                            <p style="font-size: 0.75rem; color: var(--clr-primary); font-weight: 700; margin-top: 0.35rem; text-transform: uppercase; letter-spacing: 0.5px;">Rilis {{ $movie->release_date->format('d M Y') }}</p>
-                        @endif
+                        {{-- Mobile Specific Info --}}
+                        <div class="show-on-mobile" style="margin-top: 0.25rem;">
+                            <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.75rem;">
+                                @if($movie->trailer_url)
+                                    <a href="{{ $movie->trailer_url }}" target="_blank" class="btn btn-outline btn-sm" style="border-radius: 20px; font-size: 0.75rem; padding: 0.45rem 0.9rem; border-color: rgba(255,255,255,0.4); color: white;"><i class='bx bx-play' style="font-size:1.1rem;"></i> Lihat trailer</a>
+                                @endif
+                                <a href="{{ route('movies.show', $movie) }}" class="btn btn-primary btn-sm" style="border-radius: 20px; font-size: 0.75rem; padding: 0.45rem 1.1rem; background: #e5e5e5; color: black; border: none;"><i class='bx bx-info-circle' style="font-size:1rem;"></i> Info</a>
+                            </div>
+                            <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                                <span class="badge-age-dark" style="background: #252525; border-color: #3a3a3a; font-size: 0.6rem; padding: 1px 6px;">COMING SOON</span>
+                                @if($movie->release_date)
+                                    <span class="badge-format" style="border-color: transparent; color: var(--clr-primary); font-size: 0.6rem; padding: 1px 0; text-transform: uppercase;">RILIS {{ $movie->release_date->format('d M') }}</span>
+                                @endif
+                            </div>
+                            <h3 class="font-heading" style="text-align: center; font-size: 1rem; font-weight: 700; color: white; text-transform: uppercase; margin-bottom: 0;">
+                                <a href="{{ route('movies.show', $movie) }}" style="color: inherit; text-decoration: none;">
+                                    {{ \Illuminate\Support\Str::limit($movie->title, 30) }}
+                                </a>
+                            </h3>
+                        </div>
+
+                        {{-- Desktop Original Info --}}
+                        <div class="hide-on-mobile">
+                            <h3 class="font-heading movie-title-heading">
+                                <a href="{{ route('movies.show', $movie) }}" style="color: inherit; text-decoration: none;">
+                                    {{ $movie->title }}
+                                </a>
+                            </h3>
+                            <p style="font-size: 0.75rem; color: var(--clr-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">{{ $movie->genre }}</p>
+                            @if($movie->release_date)
+                                <p style="font-size: 0.75rem; color: var(--clr-primary); font-weight: 700; margin-top: 0.35rem; text-transform: uppercase; letter-spacing: 0.5px;">Rilis {{ $movie->release_date->format('d M Y') }}</p>
+                            @endif
+                        </div>
                     </div>
                 </div>
             @endforeach
@@ -989,13 +1036,27 @@ document.addEventListener('DOMContentLoaded', () => {
         50% { transform: translateY(-8px) rotate(15deg); }
     }
 
+        .show-on-mobile { display: none !important; }
+
     @media (max-width: 768px) {
+        .hide-on-mobile { display: none !important; }
+        .show-on-mobile { display: block !important; }
+        .show-on-mobile.flex { display: flex !important; }
 
         .scroll-container {
-            padding-left: 1rem;
-            padding-right: 1rem;
+            padding-left: 15vw;
+            padding-right: 15vw;
             margin-left: -1rem;
             margin-right: -1rem;
+            scroll-snap-type: x mandatory;
+            gap: 1.25rem;
+        }
+        
+        .movie-card {
+            flex: 0 0 70vw !important;
+            max-width: none !important;
+            scroll-snap-align: center;
+            text-align: center;
         }
         .mfood-promo-banner {
             padding: 2rem 1.5rem !important;

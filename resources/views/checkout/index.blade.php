@@ -123,6 +123,20 @@
                                 <button type="submit" class="btn btn-outline" style="border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; height: 42px;">Gunakan</button>
                             </form>
                         @endif
+
+                        {{-- Inline voucher feedback --}}
+                        @if(session('error'))
+                            <div style="margin-top: 0.75rem; padding: 0.65rem 0.85rem; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 4px; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class='bx bx-x-circle' style="color: #EF4444; font-size: 1.1rem; flex-shrink: 0;"></i>
+                                <span style="color: #FCA5A5; font-size: 0.8rem; font-weight: 600;">{{ session('error') }}</span>
+                            </div>
+                        @endif
+                        @if(session('success'))
+                            <div style="margin-top: 0.75rem; padding: 0.65rem 0.85rem; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 4px; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class='bx bx-check-circle' style="color: #10B981; font-size: 1.1rem; flex-shrink: 0;"></i>
+                                <span style="color: #6EE7B7; font-size: 0.8rem; font-weight: 600;">{{ session('success') }}</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

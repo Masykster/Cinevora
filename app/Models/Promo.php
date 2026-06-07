@@ -41,8 +41,20 @@ class Promo extends Model
             if (str_starts_with($this->image_path, 'http')) {
                 return $this->image_path;
             }
+            // Local public path (e.g. /images/promos/xxx.jpg)
+            if (str_starts_with($this->image_path, '/')) {
+                return $this->image_path;
+            }
+            // Local relative path (e.g. images/promos/xxx.jpg)
+            if (str_starts_with($this->image_path, 'images/')) {
+                return '/' . $this->image_path;
+            }
+            // Another Local relative path (e.g. promos/xxx.jpg)
+            if (str_starts_with($this->image_path, 'promos/')) {
+                return '/images/' . $this->image_path;
+            }
             return Storage::disk('supabase')->url($this->image_path);
         }
-        return asset('images/placeholder-promo.jpg');
+        return '/images/placeholder-promo.jpg';
     }
 }

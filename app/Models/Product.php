@@ -99,6 +99,9 @@ class Product extends Model
             if (str_starts_with($this->image, 'http')) {
                 return $this->image;
             }
+            if (str_starts_with($this->image, '/')) {
+                return $this->image;
+            }
             return Storage::disk('supabase')->url($this->image);
         }
         return asset('images/placeholder-food.jpg');

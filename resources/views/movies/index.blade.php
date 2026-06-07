@@ -44,7 +44,11 @@
                             @if($movie->trailer_url)
                                 <span onclick="window.open('{{ $movie->trailer_url }}', '_blank'); event.preventDefault(); event.stopPropagation();" class="btn btn-outline btn-sm" style="font-weight: 700; font-size: 0.75rem; padding: 0.5rem 1.25rem; text-transform: uppercase; border-radius: 4px; display: inline-block; text-align: center; border-width: 2px; width: 130px; cursor: pointer; transition: var(--transition);">Lihat Trailer</span>
                             @endif
-                            <span class="btn btn-primary btn-sm" style="font-weight: 700; font-size: 0.75rem; padding: 0.5rem 1.25rem; width: 130px; text-align: center; border-radius: 4px;">Beli Tiket</span>
+                            @if($movie->is_now_playing)
+                                <span class="btn btn-primary btn-sm" style="font-weight: 700; font-size: 0.75rem; padding: 0.5rem 1.25rem; width: 130px; text-align: center; border-radius: 4px;">Beli Tiket</span>
+                            @else
+                                <span class="btn btn-primary btn-sm" style="font-weight: 700; font-size: 0.75rem; padding: 0.5rem 1.25rem; width: 130px; text-align: center; border-radius: 4px;">Info Detail</span>
+                            @endif
                         </div>
                         
                         {{-- Top Badges --}}

@@ -16,7 +16,11 @@ class ScheduleForm
         return $schema
             ->components([
                 Select::make('movie_id')
-                    ->relationship('movie', 'title')
+                    ->relationship(
+                        'movie', 
+                        'title',
+                        modifyQueryUsing: fn (\Illuminate\Database\Eloquent\Builder $query) => $query->nowPlaying()
+                    )
                     ->searchable()
                     ->preload()
                     ->required(),
@@ -47,8 +51,12 @@ class ScheduleForm
                     })
                     ->required(),
                 DatePicker::make('show_date')
+                    ->native(false)
+                    ->timezone('Asia/Jakarta')
                     ->required(),
                 TimePicker::make('show_time')
+                    ->native(false)
+                    ->timezone('Asia/Jakarta')
                     ->required(),
                 TextInput::make('price_weekday')
                     ->required()

@@ -148,7 +148,7 @@ class MovieForm
                                 ->maxLength(255),
                             FileUpload::make('poster_upload')
                                 ->label('Or Upload Poster')
-                                ->disk('supabase')
+                                ->disk('public_path')
                                 ->directory('movies/posters')
                                 ->image()
                                 ->live()
@@ -171,7 +171,7 @@ class MovieForm
                                 ->maxLength(255),
                             FileUpload::make('banner_upload')
                                 ->label('Or Upload Banner')
-                                ->disk('supabase')
+                                ->disk('public_path')
                                 ->directory('movies/banners')
                                 ->image()
                                 ->live()

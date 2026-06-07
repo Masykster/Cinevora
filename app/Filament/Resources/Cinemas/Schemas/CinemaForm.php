@@ -25,7 +25,7 @@ class CinemaForm
                     ->columnSpanFull(),
                 FileUpload::make('image')
                     ->image()
-                    ->disk('supabase')
+                    ->disk('public_path')
                     ->directory('cinemas'),
                 TextInput::make('phone')
                     ->tel(),

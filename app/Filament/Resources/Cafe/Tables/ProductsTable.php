@@ -26,7 +26,7 @@ class ProductsTable
                     ->sortable(),
                 ImageColumn::make('image')
                     ->label('Gambar')
-                    ->disk('supabase'),
+                    ->disk('public_path'),
                 TextColumn::make('price')
                     ->label('Harga')
                     ->money('idr')
