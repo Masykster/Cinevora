@@ -305,7 +305,7 @@
             <p style="color: var(--clr-text-muted); font-size: 0.95rem; margin-top: 0.75rem; font-weight: 500; max-width: 480px;">Pesan snack favoritmu lebih mudah secara online dan ambil tanpa antre di area Cinevora Cafe.</p>
             <div style="margin-top: 1.75rem;">
                 <a href="{{ route('cafe.menu') }}" class="btn btn-primary" style="padding: 0.8rem 2.25rem; font-weight: 800; border-radius: 6px; color:#000; box-shadow: 0 4px 15px rgba(188,163,116,0.35);">
-                    🍿 PESEN M.FOOD
+                    🍿 PESEN CAFE
                 </a>
             </div>
         </div>
@@ -375,7 +375,7 @@
     {{-- APP DOWNLOAD BANNER --}}
     <div class="app-download-banner" style="margin-top: 5rem; margin-bottom: 2rem; background: linear-gradient(90deg, #121212 0%, #1e1b15 100%); border: 1px solid var(--clr-border); border-radius: var(--radius-lg); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
         <div style="flex: 1; min-width: 280px;">
-            <h3 class="font-heading" style="font-size: 1.8rem; font-weight: 800; color: #fff; line-height: 1.2; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 0.5rem;">Download m.tix dan nikmati semua fitur dengan maksimal!</h3>
+            <h3 class="font-heading" style="font-size: 1.8rem; font-weight: 800; color: #fff; line-height: 1.2; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 0.5rem;">Download vora tix dan nikmati semua fitur dengan maksimal!</h3>
             <p style="color: var(--clr-text-muted); font-size: 0.9rem; font-weight: 500;">Beli tiket nonton, pesan f&amp;b, kumpulkan poin, dan nikmati diskon khusus eksklusif di aplikasi mobile kami.</p>
         </div>
         <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">

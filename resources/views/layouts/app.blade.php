@@ -514,7 +514,7 @@
         </a>
         <a href="{{ route('cafe.menu') }}" class="bottom-nav-item {{ request()->routeIs('cafe.menu') ? 'active' : '' }}">
             <i class='bx {{ request()->routeIs('cafe.menu') ? 'bxs-coffee-togo' : 'bx-coffee-togo' }}'></i>
-            <span>m.food</span>
+            <span>civore</span>
         </a>
         <a href="{{ route(Auth::check() ? 'profile.index' : 'login') }}" class="bottom-nav-item {{ request()->routeIs('profile.*') || request()->routeIs('login') ? 'active' : '' }}">
             <i class='bx {{ (request()->routeIs('profile.*') || request()->routeIs('login')) ? 'bxs-user' : 'bx-user' }}'></i>
