@@ -90,14 +90,18 @@
         /* === TOP NAVBAR === */
         .navbar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: transparent;
+            border-bottom: 1px solid transparent;
             height: var(--nav-height);
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 2rem;
             transition: var(--transition);
+        }
+        .navbar.navbar-scrolled {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .navbar-brand {
@@ -419,7 +423,7 @@
     {{-- TOP NAVBAR --}}
     <nav class="navbar" id="navbar">
         <a href="{{ route('home') }}" class="navbar-brand">
-            <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="height: 36px; object-fit: contain;">
+            <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="height: 64px; object-fit: contain;">
         </a>
 
         {{-- Desktop Menu --}}
@@ -531,7 +535,7 @@
         <div class="footer-content">
             <div>
                 <div style="margin-bottom: 0.5rem;">
-                    <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="height: 35px; object-fit: contain;">
+                    <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="height: 64px; object-fit: contain;">
                 </div>
                 <p class="text-muted text-sm mt-1">Sistem Booking Cinema & Cafe</p>
                 <p class="text-xs text-muted mt-2">© {{ date('Y') }} Cinevora. All rights reserved.</p>
@@ -620,6 +624,26 @@
                 img.addEventListener('error', onLoaded);
             }
         });
+    });
+    </script>
+
+    {{-- Navbar Scroll Script --}}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var navbar = document.querySelector('.navbar');
+        if (navbar) {
+            // Check initial scroll position
+            if (window.scrollY > 10) {
+                navbar.classList.add('navbar-scrolled');
+            }
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 10) {
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                }
+            });
+        }
     });
     </script>
 

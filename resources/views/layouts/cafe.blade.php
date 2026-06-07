@@ -77,7 +77,7 @@
 <body>
     <header class="cafe-header">
         <div class="cafe-brand" style="display: flex; align-items: center; gap: 0.5rem;">
-            <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="height: 24px; object-fit: contain;">
+            <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="height: 55px; object-fit: contain;">
             <small style="font-size: 0.7rem; color: var(--clr-text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-left: 0.25rem;">Cafe Admin</small>
         </div>
         <div style="display: flex; align-items: center; gap: 1rem;">

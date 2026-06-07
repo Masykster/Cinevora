@@ -199,7 +199,7 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <a href="{{ route('admin.dashboard') }}">
-                    <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="max-width: 100%; height: 28px; object-fit: contain; display: block; margin-bottom: 0.25rem;">
+                    <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="max-width: 100%; height: 64px; object-fit: contain; display: block; margin-bottom: 0.25rem;">
                 </a>
                 <small>Admin Panel</small>
             </div>

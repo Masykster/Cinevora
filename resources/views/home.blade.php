@@ -82,7 +82,7 @@
 @else
     <div style="position: relative; height: 40vh; background: linear-gradient(135deg, #121212, #000000); display: flex; align-items: center; justify-content: center; text-align: center; border-bottom: 1px solid var(--clr-border);">
         <div class="container">
-            <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="height: 60px; object-fit: contain; margin-bottom: 1rem;">
+            <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="height: 120px; object-fit: contain; margin-bottom: 1rem;">
             <p class="text-muted" style="font-size: 1rem; font-weight: 500;">Temukan film bioskop terbaik dan pesan tiket dengan mudah.</p>
         </div>
     </div>
