@@ -96,12 +96,11 @@ class Product extends Model
     public function getImageUrlAttribute(): string
     {
         if ($this->image) {
+            // Full URL already (http/https)
             if (str_starts_with($this->image, 'http')) {
                 return $this->image;
             }
-            if (str_starts_with($this->image, '/')) {
-                return $this->image;
-            }
+            // Supabase relative path (e.g. "products/xxx.png")
             return Storage::disk('supabase')->url($this->image);
         }
         return asset('images/placeholder-food.jpg');

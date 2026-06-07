@@ -23,7 +23,8 @@ class CinemasTable
                     ->searchable(),
                 TextColumn::make('city')
                     ->searchable(),
-                ImageColumn::make('image'),
+                ImageColumn::make('image')
+                    ->disk('supabase'),
                 TextColumn::make('phone')
                     ->searchable(),
                 IconColumn::make('is_active')

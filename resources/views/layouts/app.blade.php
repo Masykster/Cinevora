@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="@yield('meta_description', 'Cinevora - Booking Cinema & Cafe')">
 
@@ -10,6 +10,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://utxnzonzcdwpefdqnykc.supabase.co" crossorigin>
+    <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Using BoxIcons for mobile nav icons -->
@@ -477,6 +479,7 @@
     </nav>
 
     {{-- FLASH MESSAGES --}}
+    <main>
     <div class="main-content">
         <div class="container">
             @if(session('success'))
@@ -493,6 +496,7 @@
 
         @yield('content')
     </div>
+    </main>
 
     {{-- MOBILE BOTTOM NAV --}}
     <nav class="bottom-nav">

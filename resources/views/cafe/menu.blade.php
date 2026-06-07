@@ -54,7 +54,7 @@
                                 {{-- Square Image Container --}}
                                 <div style="width: 100px; height: 100px; background: var(--clr-surface-2); display: flex; align-items: center; justify-content: center; border-radius: 12px; overflow: hidden; border: 1px solid var(--clr-border); position: relative; flex-shrink: 0;">
                                     @if($product->image)
-                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="skeleton-img product-image" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="skeleton-img product-image" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
                                     @else
                                         <div style="position: absolute; width: 50px; height: 50px; border-radius: 50%; background: var(--clr-primary-dim); filter: blur(10px); z-index: 1;"></div>
                                         <span style="font-size: 2.2rem; position: relative; z-index: 2;">{{ $category->icon }}</span>
@@ -91,7 +91,7 @@
 </section>
 
 {{-- FLOATING CART BUTTON --}}
-<div id="floatingCartBtn" onclick="toggleCart()" style="position: fixed; bottom: 2rem; right: 2rem; background: var(--clr-primary); color: #000; width: 60px; height: 60px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(188, 163, 116, 0.35); cursor: pointer; z-index: 99; transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);">
+<div id="floatingCartBtn" onclick="toggleCart()" style="position: fixed; bottom: calc(var(--bottom-nav-height, 64px) + 1rem); right: 1.5rem; background: var(--clr-primary); color: #000; width: 60px; height: 60px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(188, 163, 116, 0.35); cursor: pointer; z-index: 99; transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);">
     <i class='bx bxs-shopping-bag'></i>
     <span id="cartCountBadge" style="position: absolute; top: -5px; right: -5px; background: #fff; color: #000; font-size: 0.75rem; font-weight: 800; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">0</span>
 </div>
@@ -191,6 +191,12 @@
     }
     #floatingCartBtn:active {
         transform: scale(0.95);
+    }
+    @media (min-width: 769px) {
+        #floatingCartBtn {
+            bottom: 2rem;
+            right: 2rem;
+        }
     }
 
     .cart-item {

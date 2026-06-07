@@ -148,9 +148,10 @@ class MovieForm
                                 ->maxLength(255),
                             FileUpload::make('poster_upload')
                                 ->label('Or Upload Poster')
-                                ->disk('public_path')
+                                ->disk('supabase')
                                 ->directory('movies/posters')
                                 ->image()
+                                ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'movies/posters', 'supabase'))
                                 ->live()
                                 ->dehydrated(false)
                                 ->formatStateUsing(function ($record) {
@@ -171,9 +172,10 @@ class MovieForm
                                 ->maxLength(255),
                             FileUpload::make('banner_upload')
                                 ->label('Or Upload Banner')
-                                ->disk('public_path')
+                                ->disk('supabase')
                                 ->directory('movies/banners')
                                 ->image()
+                                ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'movies/banners', 'supabase'))
                                 ->live()
                                 ->dehydrated(false)
                                 ->formatStateUsing(function ($record) {

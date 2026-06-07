@@ -38,21 +38,11 @@ class Promo extends Model
     public function getImageUrlAttribute(): string
     {
         if ($this->image_path) {
+            // Full URL already (http/https)
             if (str_starts_with($this->image_path, 'http')) {
                 return $this->image_path;
             }
-            // Local public path (e.g. /images/promos/xxx.jpg)
-            if (str_starts_with($this->image_path, '/')) {
-                return $this->image_path;
-            }
-            // Local relative path (e.g. images/promos/xxx.jpg)
-            if (str_starts_with($this->image_path, 'images/')) {
-                return '/' . $this->image_path;
-            }
-            // Another Local relative path (e.g. promos/xxx.jpg)
-            if (str_starts_with($this->image_path, 'promos/')) {
-                return '/images/' . $this->image_path;
-            }
+            // Supabase relative path (e.g. "promos/xxx.jpg")
             return Storage::disk('supabase')->url($this->image_path);
         }
         return '/images/placeholder-promo.jpg';

@@ -36,9 +36,10 @@ class ProductForm
                     ->minValue(0),
                 FileUpload::make('image')
                     ->image()
-                    ->disk('public_path')
-                    ->directory('cafe/products')
-                    ->maxSize(1024),
+                    ->disk('supabase')
+                    ->directory('products')
+                    ->maxSize(1024)
+                    ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'products', 'supabase')),
                 Toggle::make('is_available')
                     ->label('Tersedia')
                     ->default(true)

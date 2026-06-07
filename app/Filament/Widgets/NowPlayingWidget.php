@@ -26,7 +26,7 @@ class NowPlayingWidget extends BaseWidget
             )
             ->columns([
                 ImageColumn::make('poster')
-                    ->disk('public')
+                    ->disk('supabase')
                     ->label('Poster')
                     ->circular(),
                 TextColumn::make('title')

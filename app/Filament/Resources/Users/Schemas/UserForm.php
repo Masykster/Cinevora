@@ -37,9 +37,10 @@ class UserForm
                     ->maxLength(20),
                 \Filament\Forms\Components\FileUpload::make('avatar')
                     ->image()
-                    ->disk('public_path')
+                    ->disk('supabase')
                     ->directory('users/avatars')
-                    ->maxSize(1024),
+                    ->maxSize(1024)
+                    ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'users/avatars', 'supabase')),
             ]);
     }
 }

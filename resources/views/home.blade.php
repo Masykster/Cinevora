@@ -99,11 +99,11 @@
                         <div class="promo-carousel-slide">
                             @if($promo->link_url)
                                 <a href="{{ $promo->link_url }}" target="_blank" class="promo-slide-inner">
-                                    <img src="{{ $promo->image_url }}" alt="{{ $promo->title }}" class="skeleton-img promo-banner-img">
+                                    <img src="{{ $promo->image_url }}" alt="{{ $promo->title }}" class="skeleton-img promo-banner-img" loading="lazy">
                                 </a>
                             @else
                                 <div class="promo-slide-inner">
-                                    <img src="{{ $promo->image_url }}" alt="{{ $promo->title }}" class="skeleton-img promo-banner-img">
+                                    <img src="{{ $promo->image_url }}" alt="{{ $promo->title }}" class="skeleton-img promo-banner-img" loading="lazy">
                                 </div>
                             @endif
                         </div>
@@ -142,7 +142,7 @@
             <div class="movie-card">
                 <a href="{{ route('movies.show', $movie) }}" class="card-link">
                     <div class="movie-poster-wrapper">
-                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img">
+                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img" loading="lazy">
                         
                         {{-- Immersive Hover overlay with Gold button --}}
                         <div class="movie-card-overlay hide-on-mobile" style="flex-direction: column; gap: 0.5rem;">
@@ -222,7 +222,7 @@
                 <div class="movie-card">
                     <a href="{{ route('movies.show', $movie) }}" class="card-link">
                         <div class="movie-poster-wrapper">
-                            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img">
+                            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img" loading="lazy">
                             
                             {{-- Top Badges --}}
                             <div class="hide-on-mobile" style="position: absolute; top: 0.75rem; left: 0.75rem; display: flex; gap: 0.25rem; z-index: 5;">
@@ -355,10 +355,10 @@
         </div>
         <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
             <a href="https://play.google.com/store" target="_blank" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Download" style="height: 40px; display: block;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Download" width="135" height="40" loading="lazy" style="height: 40px; display: block;">
             </a>
             <a href="https://www.apple.com/app-store" target="_blank" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store Download" style="height: 40px; display: block;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store Download" width="120" height="40" loading="lazy" style="height: 40px; display: block;">
             </a>
         </div>
     </div>

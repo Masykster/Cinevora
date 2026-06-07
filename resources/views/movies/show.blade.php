@@ -90,7 +90,7 @@
                         {{-- Avatar Circle --}}
                         @if(!empty($movie->cast_images) && isset($movie->cast_images[$actor]) && $movie->cast_images[$actor])
                             <div class="cast-avatar">
-                                <img src="{{ $movie->cast_images[$actor] }}" alt="{{ $actor }}" class="skeleton-img" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                <img src="{{ $movie->cast_images[$actor] }}" alt="{{ $actor }}" class="skeleton-img" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
                             </div>
                         @else
                             <div class="cast-avatar cast-initials">

@@ -20,7 +20,8 @@ class PromosTable
         return $table
             ->columns([
                 ImageColumn::make('image_path')
-                    ->label('Banner Image'),
+                    ->label('Banner Image')
+                    ->disk('supabase'),
                 TextColumn::make('title')
                     ->searchable(),
                 TextColumn::make('link_url')

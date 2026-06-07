@@ -25,8 +25,9 @@ class CinemaForm
                     ->columnSpanFull(),
                 FileUpload::make('image')
                     ->image()
-                    ->disk('public_path')
-                    ->directory('cinemas'),
+                    ->disk('supabase')
+                    ->directory('cinemas')
+                    ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'cinemas', 'supabase')),
                 TextInput::make('phone')
                     ->tel(),
                 Toggle::make('is_active')

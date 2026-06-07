@@ -12,10 +12,10 @@
             <style>div::-webkit-scrollbar { display: none; }</style>
             
             <a href="{{ route('movies.index') }}" class="pill {{ request('status') != 'coming_soon' ? 'pill-active' : '' }}">
-                ⚡ Sedang Tayang
+                Sedang Tayang
             </a>
             <a href="{{ route('movies.index', ['status' => 'coming_soon']) }}" class="pill {{ request('status') == 'coming_soon' ? 'pill-active' : '' }}">
-                📅 Akan Datang
+                Akan Datang
             </a>
         </div>
     </div>
@@ -37,7 +37,7 @@
             <div class="movie-card">
                 <a href="{{ route('movies.show', $movie) }}" class="card-link">
                     <div class="movie-poster-wrapper">
-                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img">
+                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img" loading="lazy">
                         
                         {{-- Hover overlay matching MyVue style --}}
                         <div class="movie-card-overlay" style="flex-direction: column; gap: 0.5rem;">
