@@ -40,7 +40,7 @@ class UserForm
                     ->disk('supabase')
                     ->directory('users/avatars')
                     ->maxSize(1024)
-                    ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'users/avatars', 'supabase')),
+                    ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'users/avatars', 'supabase', 200, 200)),
             ]);
     }
 }

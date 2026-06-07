@@ -15,4 +15,9 @@ export default defineConfig({
             ignored: ['**/storage/framework/views/**'],
         },
     },
+    build: {
+        minify: 'esbuild',
+        cssMinify: true,
+        sourcemap: false,
+    },
 });

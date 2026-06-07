@@ -53,8 +53,13 @@
                             <div style="width: 100px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; flex-shrink: 0;">
                                 {{-- Square Image Container --}}
                                 <div style="width: 100px; height: 100px; background: var(--clr-surface-2); display: flex; align-items: center; justify-content: center; border-radius: 12px; overflow: hidden; border: 1px solid var(--clr-border); position: relative; flex-shrink: 0;">
-                                    @if($product->image)
-                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="skeleton-img product-image" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+                                     @if($product->image)
+                                         @php
+                                             $prodResp = \App\Helpers\ImageHelper::getResponsiveAttributes($product->image_url, 'product');
+                                         @endphp
+                                         <img src="{{ $prodResp['src'] }}" 
+                                              @if($prodResp['srcset']) srcset="{{ $prodResp['srcset'] }}" sizes="{{ $prodResp['sizes'] }}" @endif
+                                              alt="{{ $product->name }}" class="skeleton-img product-image" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
                                     @else
                                         <div style="position: absolute; width: 50px; height: 50px; border-radius: 50%; background: var(--clr-primary-dim); filter: blur(10px); z-index: 1;"></div>
                                         <span style="font-size: 2.2rem; position: relative; z-index: 2;">{{ $category->icon }}</span>

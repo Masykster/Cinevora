@@ -20,7 +20,7 @@ class PromoForm
                     ->disk('supabase')
                     ->directory('promos')
                     ->required()
-                    ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'promos', 'supabase')),
+                    ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'promos', 'supabase', 600)),
                 TextInput::make('link_url')
                     ->url(),
                 TextInput::make('sort_order')

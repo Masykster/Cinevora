@@ -151,7 +151,7 @@ class MovieForm
                                 ->disk('supabase')
                                 ->directory('movies/posters')
                                 ->image()
-                                ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'movies/posters', 'supabase'))
+                                ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'movies/posters', 'supabase', 400))
                                 ->live()
                                 ->dehydrated(false)
                                 ->formatStateUsing(function ($record) {
@@ -175,7 +175,7 @@ class MovieForm
                                 ->disk('supabase')
                                 ->directory('movies/banners')
                                 ->image()
-                                ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'movies/banners', 'supabase'))
+                                ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'movies/banners', 'supabase', 1200))
                                 ->live()
                                 ->dehydrated(false)
                                 ->formatStateUsing(function ($record) {

@@ -4,16 +4,29 @@
 
 @section('content')
 {{-- MOVIE DETAIL HEADER WITH BACKDROP --}}
-<div style="position: relative; padding: 5rem 0 2.5rem 0; background: url('{{ $movie->banner_url }}') center/cover no-repeat; overflow: hidden; display: flex; align-items: flex-end; border-bottom: 1px solid var(--clr-border);">
+<div style="position: relative; padding: 5rem 0 2.5rem 0; overflow: hidden; display: flex; align-items: flex-end; border-bottom: 1px solid var(--clr-border);">
+    @php
+        $bannerResp = \App\Helpers\ImageHelper::getResponsiveAttributes($movie->banner_url, 'banner');
+    @endphp
+    <img src="{{ $bannerResp['src'] }}" 
+         @if($bannerResp['srcset']) srcset="{{ $bannerResp['srcset'] }}" sizes="{{ $bannerResp['sizes'] }}" @endif
+         alt="{{ $movie->title }}" 
+         style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;"
+         loading="eager">
     {{-- High contrast gradients blending into absolute black --}}
-    <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,1) 98%);"></div>
-    <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
+    <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,1) 98%); z-index: 2;"></div>
+    <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.5) 50%, transparent 100%); z-index: 2;"></div>
     
-    <div class="container" style="position: relative; z-index: 2; display: flex; gap: 2.5rem; align-items: flex-end; flex-wrap: wrap; width: 100%;">
+    <div class="container" style="position: relative; z-index: 10; display: flex; gap: 2.5rem; align-items: flex-end; flex-wrap: wrap; width: 100%;">
         {{-- POSTER --}}
         <div style="width: 160px; flex-shrink: 0; box-shadow: 0 15px 35px rgba(0,0,0,0.95);">
             <div style="border-radius: var(--radius); overflow: hidden; border: 1px solid rgba(255,255,255,0.08);">
-                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="skeleton-img" style="width: 100%; display: block;">
+                @php
+                    $posterResp = \App\Helpers\ImageHelper::getResponsiveAttributes($movie->poster_url, 'poster');
+                @endphp
+                <img src="{{ $posterResp['src'] }}" 
+                     @if($posterResp['srcset']) srcset="{{ $posterResp['srcset'] }}" sizes="{{ $posterResp['sizes'] }}" @endif
+                     alt="{{ $movie->title }}" class="skeleton-img" style="width: 100%; display: block;">
             </div>
         </div>
 

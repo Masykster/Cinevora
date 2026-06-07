@@ -27,7 +27,7 @@ class CinemaForm
                     ->image()
                     ->disk('supabase')
                     ->directory('cinemas')
-                    ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'cinemas', 'supabase')),
+                    ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'cinemas', 'supabase', 600)),
                 TextInput::make('phone')
                     ->tel(),
                 Toggle::make('is_active')

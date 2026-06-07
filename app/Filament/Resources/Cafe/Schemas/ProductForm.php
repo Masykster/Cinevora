@@ -39,7 +39,7 @@ class ProductForm
                     ->disk('supabase')
                     ->directory('products')
                     ->maxSize(1024)
-                    ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'products', 'supabase')),
+                    ->saveUploadedFileUsing(fn ($file) => \App\Helpers\ImageHelper::storeAsWebp($file, 'products', 'supabase', 400)),
                 Toggle::make('is_available')
                     ->label('Tersedia')
                     ->default(true)

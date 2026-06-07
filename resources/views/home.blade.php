@@ -11,10 +11,18 @@
     <div class="netflix-hero-carousel">
         <div class="hero-slides-container">
             @foreach($carouselMovies as $index => $movie)
-                <div class="hero-slide" style="background: url('{{ $movie->banner_url }}') center/cover no-repeat;">
+                <div class="hero-slide" style="position: relative;">
+                    @php
+                        $bannerResp = \App\Helpers\ImageHelper::getResponsiveAttributes($movie->banner_url, 'banner');
+                    @endphp
+                    <img src="{{ $bannerResp['src'] }}" 
+                         @if($bannerResp['srcset']) srcset="{{ $bannerResp['srcset'] }}" sizes="{{ $bannerResp['sizes'] }}" @endif
+                         alt="{{ $movie->title }}" 
+                         style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;"
+                         loading="eager">
                     <!-- Linear vignettes -->
-                    <div style="position: absolute; inset: 0; background: linear-gradient(to top, #0c0c0c 0%, rgba(12,12,12,0.8) 15%, rgba(12,12,12,0) 60%, rgba(12,12,12,0.6) 100%);"></div>
-                    <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(12,12,12,0.95) 0%, rgba(12,12,12,0.7) 20%, transparent 60%);"></div>
+                    <div style="position: absolute; inset: 0; background: linear-gradient(to top, #0c0c0c 0%, rgba(12,12,12,0.8) 15%, rgba(12,12,12,0) 60%, rgba(12,12,12,0.6) 100%); z-index: 2;"></div>
+                    <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(12,12,12,0.95) 0%, rgba(12,12,12,0.7) 20%, transparent 60%); z-index: 2;"></div>
                     
                     <!-- Content container -->
                     <div class="container" style="position: absolute; bottom: 15%; left: 0; right: 0; padding: 0 2.5rem; z-index: 10; pointer-events: none;">
@@ -97,13 +105,20 @@
                 <div class="promo-carousel-track">
                     @foreach($promos as $promo)
                         <div class="promo-carousel-slide">
+                            @php
+                                $promoResp = \App\Helpers\ImageHelper::getResponsiveAttributes($promo->image_url, 'promo');
+                            @endphp
                             @if($promo->link_url)
                                 <a href="{{ $promo->link_url }}" target="_blank" class="promo-slide-inner">
-                                    <img src="{{ $promo->image_url }}" alt="{{ $promo->title }}" class="skeleton-img promo-banner-img" loading="lazy">
+                                    <img src="{{ $promoResp['src'] }}" 
+                                         @if($promoResp['srcset']) srcset="{{ $promoResp['srcset'] }}" sizes="{{ $promoResp['sizes'] }}" @endif
+                                         alt="{{ $promo->title }}" class="skeleton-img promo-banner-img" loading="lazy">
                                 </a>
                             @else
                                 <div class="promo-slide-inner">
-                                    <img src="{{ $promo->image_url }}" alt="{{ $promo->title }}" class="skeleton-img promo-banner-img" loading="lazy">
+                                    <img src="{{ $promoResp['src'] }}" 
+                                         @if($promoResp['srcset']) srcset="{{ $promoResp['srcset'] }}" sizes="{{ $promoResp['sizes'] }}" @endif
+                                         alt="{{ $promo->title }}" class="skeleton-img promo-banner-img" loading="lazy">
                                 </div>
                             @endif
                         </div>
@@ -142,7 +157,12 @@
             <div class="movie-card">
                 <a href="{{ route('movies.show', $movie) }}" class="card-link">
                     <div class="movie-poster-wrapper">
-                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img" loading="lazy">
+                        @php
+                            $posterResp = \App\Helpers\ImageHelper::getResponsiveAttributes($movie->poster_url, 'poster');
+                        @endphp
+                        <img src="{{ $posterResp['src'] }}" 
+                             @if($posterResp['srcset']) srcset="{{ $posterResp['srcset'] }}" sizes="{{ $posterResp['sizes'] }}" @endif
+                             alt="{{ $movie->title }}" class="movie-poster-img skeleton-img" loading="lazy">
                         
                         {{-- Immersive Hover overlay with Gold button --}}
                         <div class="movie-card-overlay hide-on-mobile" style="flex-direction: column; gap: 0.5rem;">
@@ -222,7 +242,12 @@
                 <div class="movie-card">
                     <a href="{{ route('movies.show', $movie) }}" class="card-link">
                         <div class="movie-poster-wrapper">
-                            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img" loading="lazy">
+                            @php
+                                $csPosterResp = \App\Helpers\ImageHelper::getResponsiveAttributes($movie->poster_url, 'poster');
+                            @endphp
+                            <img src="{{ $csPosterResp['src'] }}" 
+                                 @if($csPosterResp['srcset']) srcset="{{ $csPosterResp['srcset'] }}" sizes="{{ $csPosterResp['sizes'] }}" @endif
+                                 alt="{{ $movie->title }}" class="movie-poster-img skeleton-img" loading="lazy">
                             
                             {{-- Top Badges --}}
                             <div class="hide-on-mobile" style="position: absolute; top: 0.75rem; left: 0.75rem; display: flex; gap: 0.25rem; z-index: 5;">

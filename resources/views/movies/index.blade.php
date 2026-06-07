@@ -37,7 +37,12 @@
             <div class="movie-card">
                 <a href="{{ route('movies.show', $movie) }}" class="card-link">
                     <div class="movie-poster-wrapper">
-                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="movie-poster-img skeleton-img" loading="lazy">
+                        @php
+                            $posterResp = \App\Helpers\ImageHelper::getResponsiveAttributes($movie->poster_url, 'poster');
+                        @endphp
+                        <img src="{{ $posterResp['src'] }}" 
+                             @if($posterResp['srcset']) srcset="{{ $posterResp['srcset'] }}" sizes="{{ $posterResp['sizes'] }}" @endif
+                             alt="{{ $movie->title }}" class="movie-poster-img skeleton-img" loading="lazy">
                         
                         {{-- Hover overlay matching MyVue style --}}
                         <div class="movie-card-overlay" style="flex-direction: column; gap: 0.5rem;">
