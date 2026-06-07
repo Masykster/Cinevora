@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Cafe Admin') - Cinevora Cafe</title>
+    <link rel="icon" href="{{ asset('images/cinevora-logo.png') }}" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,7 +76,10 @@
 </head>
 <body>
     <header class="cafe-header">
-        <div class="cafe-brand"><span>CINEVORA</span><small>Cafe Admin</small></div>
+        <div class="cafe-brand" style="display: flex; align-items: center; gap: 0.5rem;">
+            <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="height: 24px; object-fit: contain;">
+            <small style="font-size: 0.7rem; color: var(--clr-text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-left: 0.25rem;">Cafe Admin</small>
+        </div>
         <div style="display: flex; align-items: center; gap: 1rem;">
             <span class="text-sm">☕ {{ Auth::user()->name }}</span>
             <a href="{{ route('home') }}" class="btn btn-ghost btn-sm">🌐 Site</a>

@@ -7,6 +7,7 @@
     <meta name="description" content="@yield('meta_description', 'Cinevora - Booking Cinema & Cafe')">
 
     <title>@yield('title', 'Cinevora')</title>
+    <link rel="icon" href="{{ asset('images/cinevora-logo.png') }}" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -89,9 +90,10 @@
         /* === TOP NAVBAR === */
         .navbar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--clr-border);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             height: var(--nav-height);
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 2rem;
@@ -416,7 +418,9 @@
 <body>
     {{-- TOP NAVBAR --}}
     <nav class="navbar" id="navbar">
-        <a href="{{ route('home') }}" class="navbar-brand">Cine<span>vora</span></a>
+        <a href="{{ route('home') }}" class="navbar-brand">
+            <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="height: 36px; object-fit: contain;">
+        </a>
 
         {{-- Desktop Menu --}}
         <div class="desktop-nav">
@@ -526,7 +530,9 @@
     <footer class="footer">
         <div class="footer-content">
             <div>
-                <div style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700; color: var(--clr-text); text-transform: lowercase; letter-spacing: 0.5px;">cine<span style="color: var(--clr-primary);">vora</span></div>
+                <div style="margin-bottom: 0.5rem;">
+                    <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="height: 35px; object-fit: contain;">
+                </div>
                 <p class="text-muted text-sm mt-1">Sistem Booking Cinema & Cafe</p>
                 <p class="text-xs text-muted mt-2">© {{ date('Y') }} Cinevora. All rights reserved.</p>
             </div>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin') - Cinevora Admin</title>
+    <link rel="icon" href="{{ asset('images/cinevora-logo.png') }}" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -197,7 +198,9 @@
         {{-- SIDEBAR --}}
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <a href="{{ route('admin.dashboard') }}">CINEVORA</a>
+                <a href="{{ route('admin.dashboard') }}">
+                    <img src="{{ asset('images/cinevora-logo.png') }}" alt="Cinevora Logo" style="max-width: 100%; height: 28px; object-fit: contain; display: block; margin-bottom: 0.25rem;">
+                </a>
                 <small>Admin Panel</small>
             </div>
 
