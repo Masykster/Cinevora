@@ -13,7 +13,7 @@ class TmdbService
 
     public function __construct()
     {
-        $this->apiKey = env('TMDB_API_KEY', '');
+        $this->apiKey = config('services.tmdb.api_key') ?? '';
     }
 
     /**

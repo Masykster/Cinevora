@@ -40,4 +40,8 @@ return [
         'webhook_token' => env('XENDIT_WEBHOOK_TOKEN'),
     ],
 
+    'tmdb' => [
+        'api_key' => env('TMDB_API_KEY'),
+    ],
+
 ];
